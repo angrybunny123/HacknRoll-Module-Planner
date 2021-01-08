@@ -6,7 +6,7 @@ label {
 
 .Foundation {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -15,7 +15,7 @@ label {
 
 .FocusArea {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -24,7 +24,7 @@ label {
 
 .MathAndSci {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -33,7 +33,7 @@ label {
 
 .ITProfessionalism {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -42,7 +42,7 @@ label {
 
 .IndustrialExperience {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -51,7 +51,7 @@ label {
 
 .TeamProject {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -60,7 +60,7 @@ label {
 
 .UnrestrictedElectives {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -69,7 +69,7 @@ label {
 
 .UniversityLevelRequirements {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;
@@ -78,7 +78,7 @@ label {
 
 .Default {
   width: 100%;
-  height: 150px;
+  height: 100px;
   border: 2px solid black;
   margin: 10px;
   border-radius: 10px;

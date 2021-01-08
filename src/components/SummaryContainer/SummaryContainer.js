@@ -5,7 +5,7 @@ import Summary from "../Summary/Summary";
 
 const SummaryContainer = (props) => {
   return (
-    <div style={{ marginTop: "10px" }}>
+    <div>
       <h2>Degree Summary</h2>
       <div className={classes.SummaryContainer}>
         <Summary label="Foundation" />
