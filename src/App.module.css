@@ -1,0 +1,21 @@
+.ModuleContainer {
+  width: 75%;
+  float: left;
+  height: 500px;
+  box-sizing: border-box;
+}
+
+.SummaryContainer {
+  width: 25%;
+  float: right;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.Container {
+  width: 200px;
+  height: 200px;
+  background-color: aqua;
+  border: 2px solid black;
+  touch-action: none;
+}

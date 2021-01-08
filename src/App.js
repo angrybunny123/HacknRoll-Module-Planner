@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import { Counter } from "./features/counter/Counter";
+import { Button } from "@material-ui/core";
 import axios from "./axios.js";
 
-// import classes from "./App.module.css";
-import "./App.css";
+import classes from "./App.module.css";
 
 import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
 import SummaryContainer from "./components/SummaryContainer/SummaryContainer";
-import { Grid, Paper } from "@material-ui/core";
+import PlanCard from "./components/PlanCard/PlanCard";
 
 class App extends Component {
     axiosTestPostRequest = () => {
@@ -28,64 +29,16 @@ class App extends Component {
             .catch((error) => console.log(error));
     };
 
-    axiosGetNusMods = () => {
-        axios
-            .get("foundation/CS1231S.json")
-            .then((res) => {
-                const prereq = res.data.prerequisites;
-                const prereqArr = Object.keys(prereq);
-
-                prereqArr.forEach((element) => {
-                    console.log(element.search("-"));
-                });
-            })
-            .catch((err) => console.log(err));
-    };
-
     render() {
         return (
-            <div className="App">
-                <div className="ModuleContainer">
+            <div>
+                <div className={classes.ModuleContainer}>
                     <ModuleContainer />
                 </div>
-                <div className="SummaryContainer">
+                <div className={classes.SummaryContainer}>
                     <SummaryContainer />
                 </div>
-                <div className="sem-table">
-                    <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        spacing={2}
-                        alignItems="center"
-                    >
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                            <Paper>hi</Paper>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                        </Grid>
-                        <Grid item xs={1}>
-                            <Paper>hi</Paper>
-                        </Grid>
-                    </Grid>
-                </div>
+                {/* <PlanCard /> */}
             </div>
         );
     }
