@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "./axios.js";
-import { TextField, MenuItem } from "@material-ui/core";
+import { TextField, MenuItem, Button } from "@material-ui/core";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import classes from "./App.module.css";
@@ -82,6 +82,48 @@ class App extends Component {
         };
         this.onDragEnd = this.onDragEnd.bind(this);
     }
+
+    componentDidMount() {
+        // const queryparam = '&orderBy="userId"&equalTo="' + localStorage.getItem("userId") + '"';
+        const userId = localStorage.getItem("userId");
+        axios
+            .get(`/userdata/${userId}.json`)
+            .then((res) => {
+                console.log(res.data.data);
+                const values = Object.entries(res.data.data);
+                const newState = JSON.parse(JSON.stringify(this.state));
+                console.log(values);
+                values.forEach(value => { 
+                    // console.log(newState.planner.value[0]);
+                    newState.planner[value[0]] = value[1]
+                    // console.log(this.state.planner[value[0]]);
+                    // console.log(value[0]);
+                    // console.log("DestinationArray", newDestinationArray);
+                });
+                this.setState(newState);
+                console.log("newState", newState);
+            })
+            
+            .catch((err) => {
+                console.log(err.message);
+            });
+            
+    }
+
+    onSaveHandler = () => {
+        const userId = localStorage.getItem("userId");
+        let data = {
+            data: this.state.planner,
+        };
+        axios
+            .patch(`/userdata/${userId}.json`, data)
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    };
 
     onModuleFieldHandler = (event) => {
         this.setState({ currentField: event.target.value });
@@ -240,15 +282,21 @@ class App extends Component {
 
             // let lastIndex = result.destination ? result.destination.length - 1 : 0;
 
+            newDestinationArray.push(result.movedItem);
+            console.log("NEW DESTINATION ARRAY", newDestinationArray);
+            console.log("New State", newState);
+            newState.planner[source.droppableId] = result.source;
+            newState.planner[destination.droppableId] = newDestinationArray;
+
+            this.setState(newState);
+          
             let moduleTaken = [];
 
             const arrKey = Object.keys(this.state.planner);
             arrKey.splice(0, 1);
-            console.log(arrKey);
             arrKey.forEach((key, index) => {
                 moduleTaken = moduleTaken.concat(this.state.planner[key]);
             });
-            console.log(moduleTaken);
 
             let getlink = "";
             if (this.state.stringToPost.includes("focusareas")) {
@@ -432,16 +480,11 @@ class App extends Component {
 
                         // check for OR
                         if (element.search("-") !== -1) {
-                            console.log("hi im inside OR");
                             const arr = element.split("-");
-                            console.log(arr);
-                            console.log(moduleTaken);
                             canTake = false;
 
                             arr.forEach((module, index) => {
                                 moduleTaken.forEach((modTaken, i) => {
-                                    console.log(modTaken);
-                                    console.log(module);
                                     canTake =
                                         canTake || modTaken.code === module;
                                 });
@@ -451,15 +494,9 @@ class App extends Component {
                                 return false;
                             }
                         } else {
-                            console.log(canTake);
-
                             // AND
                             // loop through user data
-                            console.log("hi im at AND");
-                            console.log(moduleTaken);
                             moduleTaken.forEach((modTaken, i) => {
-                                console.log(modTaken);
-                                console.log(element);
                                 if (modTaken.code === element) {
                                     canTake = true;
                                     return;
@@ -471,12 +508,11 @@ class App extends Component {
                             }
                         }
                     });
-                    console.log(canTake);
+
                     return canTake;
                 })
                 .then((bool) => {
                     if (bool) {
-                        console.log("hi im inside true");
                         newDestinationArray.push(result.movedItem);
                         console.log(
                             "NEW DESTINATION ARRAY",
@@ -497,6 +533,7 @@ class App extends Component {
             }
 
             
+
 
             // this.setState({
             //     planner: {
@@ -650,9 +687,10 @@ class App extends Component {
                             />
                         </div>
                     </DragDropContext>
+                    <Button onClick={this.onSaveHandler}>SAVE</Button>
                 </div>
                 <div className={classes.SummaryContainer}>
-                    <SummaryContainer modules={this.state.planner}/>
+                    <SummaryContainer modules={this.state.planner} />
                 </div>
                 {/* <PlanCard /> */}
             </div>
