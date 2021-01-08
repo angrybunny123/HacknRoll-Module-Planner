@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import classes from "./App.module.css";
 
+import Navbar from "./components/Navbar/Navbar";
 import Module from "./components/Module/Module";
 import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
 import PlanCard from "./components/PlanCard/PlanCard";
@@ -555,6 +556,7 @@ class App extends Component {
         });
         return (
             <div>
+                <Navbar isAuthenticated={localStorage.getItem("token") !== null}/>
                 <div className={classes.ModuleContainer}>
                     <DragDropContext onDragEnd={this.onDragEnd}>
                         <div className={classes.SelectionContainer}>
