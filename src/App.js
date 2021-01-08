@@ -10,6 +10,8 @@ import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
 import PlanCard from "./components/PlanCard/PlanCard";
 import SummaryContainer from "./components/SummaryContainer/SummaryContainer";
 
+import { checkPrereq } from "./util/NusModChecker.js";
+
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -76,6 +78,7 @@ class App extends Component {
                 y4s1: [],
                 y4s2: [],
             },
+            stringToPost: "",
         };
         this.onDragEnd = this.onDragEnd.bind(this);
     }
@@ -124,44 +127,45 @@ class App extends Component {
 
     onModuleFieldHandler = (event) => {
         this.setState({ currentField: event.target.value });
-        let stringToPost = "";
+        this.state.stringToPost = "";
         if (event.target.value === "Foundation") {
-            stringToPost = "foundation";
+            this.state.stringToPost = "foundation";
         } else if (event.target.value === "Math and Science") {
-            stringToPost = "mathscience";
+            this.state.stringToPost = "mathscience";
         } else if (event.target.value === "IT Professionalism") {
-            stringToPost = "itprofessionalism";
+            this.state.stringToPost = "itprofessionalism";
         } else if (event.target.value === "University Level Requirements") {
-            stringToPost = "unrestrictedelectives";
+            this.state.stringToPost = "unrestrictedelectives";
         } else if (event.target.value === "Unrestricted Electives") {
-            stringToPost = "universitylevelrequirements";
+            this.state.stringToPost = "universitylevelrequirements";
         } else if (event.target.value === "Team Project") {
-            stringToPost = "teamproject";
+            this.state.stringToPost = "teamproject";
         } else if (event.target.value === "Industrial Experience") {
-            stringToPost = "industrial";
+            this.state.stringToPost = "industrial";
         } else if (event.target.value === "Algorithms & Theory") {
-            stringToPost = "focusareas/algorithmsandtheory";
+            this.state.stringToPost = "focusareas/algorithmsandtheory";
         } else if (event.target.value === "Artificial Intelligence") {
-            stringToPost = "focusareas/artificialintelligence";
+            this.state.stringToPost = "focusareas/artificialintelligence";
         } else if (event.target.value === "Computer Graphics & Games") {
-            stringToPost = "focusareas/computergraphicsandgames";
+            this.state.stringToPost = "focusareas/computergraphicsandgames";
         } else if (event.target.value === "Computer Security") {
-            stringToPost = "focusareas/computersecurity";
+            this.state.stringToPost = "focusareas/computersecurity";
         } else if (event.target.value === "Database Systems") {
-            stringToPost = "focusareas/databasesystems";
+            this.state.stringToPost = "focusareas/databasesystems";
         } else if (event.target.value === "Multimedia Information Retrieval") {
-            stringToPost = "focusareas/multimedia";
+            this.state.stringToPost = "focusareas/multimedia";
         } else if (event.target.value === "Networking & Distributed Systems") {
-            stringToPost = "focusareas/networkinganddistributedsystems";
+            this.state.stringToPost =
+                "focusareas/networkinganddistributedsystems";
         } else if (event.target.value === "Parallel Computing") {
-            stringToPost = "focusareas/parallelcomputing";
+            this.state.stringToPost = "focusareas/parallelcomputing";
         } else if (event.target.value === "Programming Languages") {
-            stringToPost = "focusareas/programminglanguages";
+            this.state.stringToPost = "focusareas/programminglanguages";
         } else if (event.target.value === "Software Engineering") {
-            stringToPost = "focusareas/softwareengineering";
+            this.state.stringToPost = "focusareas/softwareengineering";
         }
         axios
-            .get(`${stringToPost}.json`)
+            .get(`${this.state.stringToPost}.json`)
             .then((response) => {
                 if (response.data.primaries !== undefined) {
                     let newModules = Object.values(response.data.primaries);
@@ -285,6 +289,94 @@ class App extends Component {
             newState.planner[destination.droppableId] = newDestinationArray;
 
             this.setState(newState);
+          
+            let moduleTaken = [];
+
+            const arrKey = Object.keys(this.state.planner);
+            arrKey.splice(0, 1);
+            console.log(arrKey);
+            arrKey.forEach((key, index) => {
+                moduleTaken = moduleTaken.concat(this.state.planner[key]);
+            });
+            console.log(moduleTaken);
+
+            axios
+                .get(`${this.state.stringToPost}/${result.movedItem.code}.json`)
+                .then((res) => res.data.prerequisites)
+                .then((prerequisites) => {
+                    if (prerequisites === "none") {
+                        return true;
+                    }
+
+                    let canTake = false;
+                    const prereqArr = Object.keys(prerequisites);
+
+                    prereqArr.forEach((element) => {
+                        // check with user data
+
+                        // check for OR
+                        if (element.search("-") !== -1) {
+                            console.log("hi im inside OR");
+                            const arr = element.split("-");
+                            console.log(arr);
+                            console.log(moduleTaken);
+                            canTake = false;
+
+                            arr.forEach((module, index) => {
+                                moduleTaken.forEach((modTaken, i) => {
+                                    console.log(modTaken);
+                                    console.log(module);
+                                    canTake =
+                                        canTake || modTaken.code === module;
+                                });
+                            });
+
+                            if (!canTake) {
+                                return false;
+                            }
+                        } else {
+                            console.log(canTake);
+
+                            // AND
+                            // loop through user data
+                            console.log("hi im at AND");
+                            console.log(moduleTaken);
+                            moduleTaken.forEach((modTaken, i) => {
+                                console.log(modTaken);
+                                console.log(element);
+                                if (modTaken.code === element) {
+                                    canTake = true;
+                                    return;
+                                }
+                            });
+
+                            if (!canTake) {
+                                return false;
+                            }
+                        }
+                    });
+                    console.log(canTake);
+                    return canTake;
+                })
+                .then((bool) => {
+                    if (bool) {
+                        console.log("hi im inside true");
+                        newDestinationArray.push(result.movedItem);
+                        console.log(
+                            "NEW DESTINATION ARRAY",
+                            newDestinationArray
+                        );
+                        console.log("New State", newState);
+                        newState.planner[source.droppableId] = result.source;
+                        newState.planner[
+                            destination.droppableId
+                        ] = newDestinationArray;
+                        this.setState(newState);
+                    } else {
+                        alert("Prerequisite not satisfied!!");
+                    }
+                })
+                .catch((err) => console.log(err));
             // this.setState({
             //     planner: {
             //         modulesTaken: newDestinationArray,
@@ -441,7 +533,7 @@ class App extends Component {
                     <Button onClick={this.onSaveHandler}>SAVE</Button>
                 </div>
                 <div className={classes.SummaryContainer}>
-                    <SummaryContainer />
+                    <SummaryContainer modules={this.state.planner}/>
                 </div>
                 {/* <PlanCard /> */}
             </div>
