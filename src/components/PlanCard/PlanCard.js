@@ -12,8 +12,8 @@ const getPlanStyle = (isDraggingOver) => ({
   padding: 8,
   overflow: "auto",
   border: "2px solid black",
-  height: "450px",
-  width: "90px",
+  height: "350px",
+  width: "200px",
   padding: "20px",
 });
 
@@ -21,6 +21,9 @@ class PlanCard extends Component {
   render() {
     return (
       <div className={classes.PlanCardContainer}>
+          <p>
+              {this.props.acadYear}
+          </p>
         <Droppable droppableId={this.props.droppableId} direction="vertical">
           {(provided, snapshot) => (
             <div
