@@ -225,6 +225,28 @@ const Summary = (props) => {
 
   const classes = useStyles();
 
+  let creditstats = (
+    <label className={classes.labelMC}>
+      <br />
+      MCs Needed: {calculateMcNeeded()}
+      <br />
+      MCs Taken: {calculateMcTaken()}
+    </label>
+  );
+
+  if (calculateMcTaken() === calculateMcNeeded()) {
+    creditstats = (
+      <div
+        style={{
+          backgroundColor: "limegreen",
+          padding: "10px",
+        }}
+      >
+        Completed!
+      </div>
+    );
+  }
+
   return (
     <Paper
       elevation={3}
@@ -250,12 +272,7 @@ const Summary = (props) => {
     >
       <div className={classes.container}>
         <label className={classes.label}>{props.label}</label>
-        <label className={classes.labelMC}>
-          <br />
-          MCs Needed: {calculateMcNeeded()}
-          <br />
-          MCs Taken: {calculateMcTaken()}
-        </label>
+        {creditstats}
       </div>
     </Paper>
   );
