@@ -113,6 +113,7 @@ class ModuleContainer extends Component {
                 y3s2: [],
                 y4s1: [],
                 y4s2: [],
+                
             },
         };
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -168,13 +169,15 @@ class ModuleContainer extends Component {
                         }
                     }
                     for (let j = 0; j < newModules.length; j++) {
-                        for (let i = 0; i < this.state.plan.length; i++) {
-                            if (
-                                this.state.plan[i].code === newModules[j].code
-                            ) {
-                                newModules.splice(j, 1);
+                        Object.entries(this.state.planner).forEach(([yearSem, modulesTookEachSem]) => {
+                            if (yearSem !== "modules") {
+                                for (let i = 0; i < modulesTookEachSem.length; i++) {
+                                    if (modulesTookEachSem[i].code === newModules[j].code) {
+                                        newModules.splice(j, 1);
+                                    }
+                                }
                             }
-                        }
+                        })
                     }
                     this.setState({
                         planner: { ...this.state.planner, modules: newModules },
@@ -183,18 +186,20 @@ class ModuleContainer extends Component {
                 } else {
                     let modulesCheck = Object.values(response.data);
                     for (let j = 0; j < modulesCheck.length; j++) {
-                        for (let i = 0; i < this.state.plan.length; i++) {
-                            if (
-                                this.state.plan[i].code === modulesCheck[j].code
-                            ) {
-                                modulesCheck.splice(j, 1);
+                        Object.entries(this.state.planner).forEach(([yearSem, modulesTookEachSem]) => {
+                            if (yearSem !== "modules") {
+                                for (let i = 0; i < modulesTookEachSem.length; i++) {
+                                    if (modulesTookEachSem[i].code === modulesCheck[j].code) {
+                                        modulesCheck.splice(j, 1);
+                                    }
+                                }
                             }
-                        }
+                        })
                     }
                     this.setState({
                         planner: {
                             ...this.state.planner,
-                            modules: Object.values(response.data),
+                            modules: modulesCheck,
                         },
 
                     });
@@ -256,6 +261,11 @@ class ModuleContainer extends Component {
             console.log("New State", newState);
             newState.planner[source.droppableId] = result.source;
             newState.planner[destination.droppableId] = newDestinationArray;
+            // this.setState({
+            //     planner: {
+            //         modulesTaken: newDestinationArray,
+            //     }
+            // })
 
             // this.setState({
             //     modules: result.droppable,
@@ -365,6 +375,18 @@ class ModuleContainer extends Component {
                     <PlanCard
                         droppableId="y3s1"
                         array={this.state.planner.y3s1}
+                    />
+                    <PlanCard
+                        droppableId="y3s2"
+                        array={this.state.planner.y3s2}
+                    />
+                    <PlanCard
+                        droppableId="y4s1"
+                        array={this.state.planner.y4s1}
+                    />
+                    <PlanCard
+                        droppableId="y4s2"
+                        array={this.state.planner.y4s2}
                     />
                 </div>
             </DragDropContext>
