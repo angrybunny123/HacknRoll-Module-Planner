@@ -6,6 +6,7 @@ import { TextField, MenuItem } from "@material-ui/core";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Module from "../Module/Module";
+import PlanCard from "../PlanCard/PlanCard";
 import Card from "../Card";
 import Board from "../Board";
 
@@ -31,6 +32,11 @@ const move = (source, destination, droppableSource, droppableDestination) => {
     const result = {};
     result[droppableSource.droppableId] = sourceClone;
     result[droppableDestination.droppableId] = destClone;
+    result["destination"] = destClone;
+    result["source"] = sourceClone;
+    result["movedItem"] = removed;
+
+    console.log("result", result);
 
     return result;
 };
@@ -97,8 +103,17 @@ class ModuleContainer extends Component {
                 "Software Engineering",
             ],
             currentField: "",
-            modules: [],
-            plan: [],
+            planner: {
+                modules: [],
+                y1s1: [],
+                y1s2: [],
+                y2s1: [],
+                y2s2: [],
+                y3s1: [],
+                y3s2: [],
+                y4s1: [],
+                y4s2: [],
+            },
         };
         this.onDragEnd = this.onDragEnd.bind(this);
     }
@@ -162,7 +177,7 @@ class ModuleContainer extends Component {
                         }
                     }
                     this.setState({
-                        modules: newModules,
+                        planner: { ...this.state.planner, modules: newModules },
                     });
                     console.log(newModules);
                 } else {
@@ -177,7 +192,11 @@ class ModuleContainer extends Component {
                         }
                     }
                     this.setState({
-                        modules: modulesCheck,
+                        planner: {
+                            ...this.state.planner,
+                            modules: Object.values(response.data),
+                        },
+
                     });
                 }
             })
@@ -185,11 +204,19 @@ class ModuleContainer extends Component {
     };
 
     id2List = {
-        droppable: "modules",
+        modules: "modules",
         droppable2: "plan",
+        y1s1: "y1s1",
+        y1s2: "y1s2",
+        y2s1: "y2s1",
+        y2s2: "y2s2",
+        y3s1: "y3s1",
+        y3s2: "y3s2",
+        y4s1: "y4s1",
+        y4s2: "y4s2",
     };
 
-    getList = (id) => this.state[this.id2List[id]];
+    getList = (id) => this.state.planner[this.id2List[id]];
 
     onDragEnd = (result) => {
         const { source, destination } = result;
@@ -216,17 +243,33 @@ class ModuleContainer extends Component {
                 source,
                 destination
             );
+            
+            console.log("Old State", this.state);
+            const newState = JSON.parse(JSON.stringify(this.state));
+            let newDestinationArray = [...this.state.planner[destination.droppableId]];
+            
+            
+            // let lastIndex = result.destination ? result.destination.length - 1 : 0;
 
-            this.setState({
-                modules: result.droppable,
-                plan: result.droppable2,
-            });
+            newDestinationArray.push(result.movedItem);
+            console.log("NEW DESTINATION ARRAY", newDestinationArray);
+            console.log("New State", newState);
+            newState.planner[source.droppableId] = result.source;
+            newState.planner[destination.droppableId] = newDestinationArray;
+
+            // this.setState({
+            //     modules: result.droppable,
+            //     plan: result.droppable2,
+            //     planner: { ...this.state.planner, y1s1: result.y1s1 },
+            // });
+
+            this.setState(newState);
         }
     };
 
     render() {
         let modules;
-        modules = this.state.modules.map((module) => {
+        modules = this.state.planner.modules.map((module) => {
             return (
                 <Board id={module.code} className="board">
                     <Card id="card-1" className="card" draggable="true">
@@ -261,76 +304,68 @@ class ModuleContainer extends Component {
                             {moduleFields}
                         </TextField>
                     </div>
-                    <Droppable droppableId="droppable" direction="horizontal">
+                    <Droppable droppableId="modules" direction="horizontal">
                         {(provided, snapshot) => (
                             <div
                                 ref={provided.innerRef}
                                 style={getListStyle(snapshot.isDraggingOver)}
                                 {...provided.droppableProps}
                             >
-                                {this.state.modules.map((module, index) => (
-                                    <Draggable
-                                        key={module.code}
-                                        draggableId={module.code}
-                                        index={index}
-                                    >
-                                        {(provided, snapshot) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                style={getItemStyle(
-                                                    snapshot.isDragging,
-                                                    provided.draggableProps
-                                                        .style
-                                                )}
-                                            >
-                                                {module.code}
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                ))}
+                                {this.state.planner.modules
+                                    ? this.state.planner.modules.map(
+                                          (module, index) => (
+                                              <Draggable
+                                                  key={module.code}
+                                                  draggableId={module.code}
+                                                  index={index}
+                                              >
+                                                  {(provided, snapshot) => (
+                                                      <div
+                                                          ref={
+                                                              provided.innerRef
+                                                          }
+                                                          {...provided.draggableProps}
+                                                          {...provided.dragHandleProps}
+                                                          style={getItemStyle(
+                                                              snapshot.isDragging,
+                                                              provided
+                                                                  .draggableProps
+                                                                  .style
+                                                          )}
+                                                      >
+                                                          {module.code}
+                                                      </div>
+                                                  )}
+                                              </Draggable>
+                                          )
+                                      )
+                                    : null}
                                 {provided.placeholder}
                             </div>
                         )}
                     </Droppable>
                 </div>
                 <div className={classes.PlanCardContainer}>
-                    <Droppable droppableId="droppable2" direction="vertical">
-                        {(provided, snapshot) => (
-                            <div
-                                ref={provided.innerRef}
-                                style={getPlanStyle(snapshot.isDraggingOver)}
-                            >
-                                {this.state.plan
-                                    ? this.state.plan.map((module, index) => (
-                                          <Draggable
-                                              key={module.code}
-                                              draggableId={module.code}
-                                              index={index}
-                                          >
-                                              {(provided, snapshot) => (
-                                                  <div
-                                                      ref={provided.innerRef}
-                                                      {...provided.draggableProps}
-                                                      {...provided.dragHandleProps}
-                                                      style={getItemStyle(
-                                                          snapshot.isDragging,
-                                                          provided
-                                                              .draggableProps
-                                                              .style
-                                                      )}
-                                                  >
-                                                      {module.code}
-                                                  </div>
-                                              )}
-                                          </Draggable>
-                                      ))
-                                    : null}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
+                    <PlanCard
+                        droppableId="y1s1"
+                        array={this.state.planner.y1s1}
+                    />
+                    <PlanCard
+                        droppableId="y1s2"
+                        array={this.state.planner.y1s2}
+                    />
+                    <PlanCard
+                        droppableId="y2s1"
+                        array={this.state.planner.y2s1}
+                    />
+                    <PlanCard
+                        droppableId="y2s2"
+                        array={this.state.planner.y2s2}
+                    />
+                    <PlanCard
+                        droppableId="y3s1"
+                        array={this.state.planner.y3s1}
+                    />
                 </div>
             </DragDropContext>
         );
