@@ -112,6 +112,7 @@ class ModuleContainer extends Component {
           sem: 0,
         },
       ],
+      plan: [],
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
