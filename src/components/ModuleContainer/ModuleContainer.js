@@ -7,8 +7,6 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Module from "../Module/Module";
 import PlanCard from "../PlanCard/PlanCard";
-import Card from "../Card";
-import Board from "../Board";
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
