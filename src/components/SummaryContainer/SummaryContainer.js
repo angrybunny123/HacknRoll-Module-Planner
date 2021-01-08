@@ -11,6 +11,7 @@ const SummaryContainer = (props) => {
     
     <div>
       <h2>Degree Summary</h2>
+      <h2> Total MCs Taken: {props.totalCredits}</h2>
       <div className={classes.SummaryContainer}>
         <Summary label="Foundation" module={planner}/>
         <Summary label="Focus Area" module={planner}/>

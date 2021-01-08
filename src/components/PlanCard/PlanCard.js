@@ -57,6 +57,7 @@ class PlanCard extends Component {
             </div>
           )}
         </Droppable>
+        <h4>Total Credits: {this.props.credits}</h4>
       </div>
     );
   }

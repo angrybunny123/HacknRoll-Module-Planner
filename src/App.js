@@ -639,41 +639,49 @@ class App extends Component {
                             <PlanCard
                                 droppableId="y1s1"
                                 acadYear="Y1S1"
+                                credits={creditsPerSem(this.state.planner.y1s1)}
                                 array={this.state.planner.y1s1}
                             />
                             <PlanCard
                                 droppableId="y1s2"
                                 acadYear="Y1S2"
+                                credits={creditsPerSem(this.state.planner.y1s2)}
                                 array={this.state.planner.y1s2}
                             />
                             <PlanCard
                                 droppableId="y2s1"
                                 acadYear="Y2S1"
+                                credits={creditsPerSem(this.state.planner.y2s1)}
                                 array={this.state.planner.y2s1}
                             />
                             <PlanCard
                                 droppableId="y2s2"
                                 acadYear="Y2S2"
+                                credits={creditsPerSem(this.state.planner.y2s2)}
                                 array={this.state.planner.y2s2}
                             />
                             <PlanCard
                                 droppableId="y3s1"
                                 acadYear="Y3S1"
+                                credits={creditsPerSem(this.state.planner.y3s1)}
                                 array={this.state.planner.y3s1}
                             />
                             <PlanCard
                                 droppableId="y3s2"
                                 acadYear="Y3S2"
+                                credits={creditsPerSem(this.state.planner.y3s2)}
                                 array={this.state.planner.y3s2}
                             />
                             <PlanCard
                                 droppableId="y4s1"
                                 acadYear="Y4S1"
+                                credits={creditsPerSem(this.state.planner.y4s1)}
                                 array={this.state.planner.y4s1}
                             />
                             <PlanCard
                                 droppableId="y4s2"
                                 acadYear="Y4S2"
+                                credits={creditsPerSem(this.state.planner.y4s2)}
                                 array={this.state.planner.y4s2}
                             />
                         </div>
@@ -681,12 +689,36 @@ class App extends Component {
                     <Button onClick={this.onSaveHandler}>SAVE</Button>
                 </div>
                 <div className={classes.SummaryContainer}>
-                    <SummaryContainer modules={this.state.planner} />
+                    <SummaryContainer 
+                        modules={this.state.planner} 
+                        totalCredits={totalCredits(this.state.planner)}/>
                 </div>
                 {/* <PlanCard /> */}
             </div>
         );
     }
+}
+
+function creditsPerSem(yearSem) {
+    let credits = 0;
+    for (let i = 0; i < yearSem.length; i++) {
+        credits = credits + yearSem[i].credits;
+    }
+    return credits;
+}
+
+function totalCredits(planner) {
+    let credits = 0;
+    Object.entries(planner).forEach(
+        ([yearSem, mods]) => {
+            if (yearSem !== "modules") {
+                for ( let i = 0; i < mods.length; i++) {
+                    credits = credits + mods[i].credits;
+                }
+            }
+        }
+    );
+    return credits;
 }
 
 export default App;
