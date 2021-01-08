@@ -215,15 +215,87 @@ class App extends Component {
         destination
       );
 
-      console.log("Old State", this.state);
-      const newState = JSON.parse(JSON.stringify(this.state));
-      let newDestinationArray = [
-        ...this.state.planner[destination.droppableId],
-      ];
+      let moduleTaken = [];
 
-      // let lastIndex = result.destination ? result.destination.length - 1 : 0;
+      const arrKey = Object.keys(this.state.planner);
+      arrKey.splice(0, 1);
+      console.log(arrKey);
+      arrKey.forEach((key, index) => {
+        moduleTaken = moduleTaken.concat(this.state.planner[key]);
+      });
+      console.log(moduleTaken);
 
-      const moduleTaken = [];
+      axios
+        .get(`${this.state.stringToPost}/${result.movedItem.code}.json`)
+        .then((res) => res.data.prerequisites)
+        .then((prerequisites) => {
+          if (prerequisites === "none") {
+            return true;
+          }
+
+          let canTake = false;
+          const prereqArr = Object.keys(prerequisites);
+
+          prereqArr.forEach((element) => {
+            // check with user data
+
+            // check for OR
+            if (element.search("-") !== -1) {
+              console.log("hi im inside OR");
+              const arr = element.split("-");
+              console.log(arr);
+              console.log(moduleTaken);
+              canTake = false;
+
+              arr.forEach((module, index) => {
+                moduleTaken.forEach((modTaken, i) => {
+                  console.log(modTaken);
+                  console.log(module);
+                  canTake = canTake || modTaken.code === module;
+                });
+              });
+
+              if (!canTake) {
+                return false;
+              }
+            } else {
+              console.log(canTake);
+
+              // AND
+              // loop through user data
+              console.log("hi im at AND");
+              console.log(moduleTaken);
+              moduleTaken.forEach((modTaken, i) => {
+                console.log(modTaken);
+                console.log(element);
+                if (modTaken.code === element) {
+                  canTake = true;
+                  return;
+                }
+              });
+
+              if (!canTake) {
+                return false;
+              }
+            }
+          });
+          console.log(canTake);
+          return canTake;
+        })
+        .then((bool) => {
+          if (bool) {
+            console.log("hi im inside true");
+            newDestinationArray.push(result.movedItem);
+            console.log("NEW DESTINATION ARRAY", newDestinationArray);
+            console.log("New State", newState);
+            newState.planner[source.droppableId] = result.source;
+            newState.planner[destination.droppableId] = newDestinationArray;
+            this.setState(newState);
+          } else {
+            alert("Prerequisite not satisfied!!");
+          }
+        })
+        .catch((err) => console.log(err));
 
       const arrKey = Object.keys(this.state.planner);
       arrKey.splice(0, 1);
@@ -239,17 +311,6 @@ class App extends Component {
       newState.planner[source.droppableId] = result.source;
       newState.planner[destination.droppableId] = newDestinationArray;
       this.setState(newState);
-      // this.setState({
-      //     planner: {
-      //         modulesTaken: newDestinationArray,
-      //     }
-      // })
-
-      // this.setState({
-      //     modules: result.droppable,
-      //     plan: result.droppable2,
-      //     planner: { ...this.state.planner, y1s1: result.y1s1 },
-      // });
     }
   };
 
