@@ -10,6 +10,8 @@ import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
 import PlanCard from "./components/PlanCard/PlanCard";
 import SummaryContainer from "./components/SummaryContainer/SummaryContainer";
 
+import { checkPrereq } from "./util/NusModChecker.js";
+
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -76,50 +78,52 @@ class App extends Component {
         y4s1: [],
         y4s2: [],
       },
+      stringToPost: "",
+      loading: false,
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   onModuleFieldHandler = (event) => {
     this.setState({ currentField: event.target.value });
-    let stringToPost = "";
+    this.state.stringToPost = "";
     if (event.target.value === "Foundation") {
-      stringToPost = "foundation";
+      this.state.stringToPost = "foundation";
     } else if (event.target.value === "Math and Science") {
-      stringToPost = "mathscience";
+      this.state.stringToPost = "mathscience";
     } else if (event.target.value === "IT Professionalism") {
-      stringToPost = "itprofessionalism";
+      this.state.stringToPost = "itprofessionalism";
     } else if (event.target.value === "University Level Requirements") {
-      stringToPost = "unrestrictedelectives";
+      this.state.stringToPost = "unrestrictedelectives";
     } else if (event.target.value === "Unrestricted Electives") {
-      stringToPost = "universitylevelrequirements";
+      this.state.stringToPost = "universitylevelrequirements";
     } else if (event.target.value === "Team Project") {
-      stringToPost = "teamproject";
+      this.state.stringToPost = "teamproject";
     } else if (event.target.value === "Industrial Experience") {
-      stringToPost = "industrial";
+      this.state.stringToPost = "industrial";
     } else if (event.target.value === "Algorithms & Theory") {
-      stringToPost = "focusareas/algorithmsandtheory";
+      this.state.stringToPost = "focusareas/algorithmsandtheory";
     } else if (event.target.value === "Artificial Intelligence") {
-      stringToPost = "focusareas/artificialintelligence";
+      this.state.stringToPost = "focusareas/artificialintelligence";
     } else if (event.target.value === "Computer Graphics & Games") {
-      stringToPost = "focusareas/computergraphicsandgames";
+      this.state.stringToPost = "focusareas/computergraphicsandgames";
     } else if (event.target.value === "Computer Security") {
-      stringToPost = "focusareas/computersecurity";
+      this.state.stringToPost = "focusareas/computersecurity";
     } else if (event.target.value === "Database Systems") {
-      stringToPost = "focusareas/databasesystems";
+      this.state.stringToPost = "focusareas/databasesystems";
     } else if (event.target.value === "Multimedia Information Retrieval") {
-      stringToPost = "focusareas/multimedia";
+      this.state.stringToPost = "focusareas/multimedia";
     } else if (event.target.value === "Networking & Distributed Systems") {
-      stringToPost = "focusareas/networkinganddistributedsystems";
+      this.state.stringToPost = "focusareas/networkinganddistributedsystems";
     } else if (event.target.value === "Parallel Computing") {
-      stringToPost = "focusareas/parallelcomputing";
+      this.state.stringToPost = "focusareas/parallelcomputing";
     } else if (event.target.value === "Programming Languages") {
-      stringToPost = "focusareas/programminglanguages";
+      this.state.stringToPost = "focusareas/programminglanguages";
     } else if (event.target.value === "Software Engineering") {
-      stringToPost = "focusareas/softwareengineering";
+      this.state.stringToPost = "focusareas/softwareengineering";
     }
     axios
-      .get(`${stringToPost}.json`)
+      .get(`${this.state.stringToPost}.json`)
       .then((response) => {
         if (response.data.primaries !== undefined) {
           let newModules = Object.values(response.data.primaries);
@@ -143,6 +147,7 @@ class App extends Component {
               }
             );
           }
+
           this.setState({
             planner: { ...this.state.planner, modules: newModules },
           });
@@ -222,11 +227,37 @@ class App extends Component {
 
       // let lastIndex = result.destination ? result.destination.length - 1 : 0;
 
-      newDestinationArray.push(result.movedItem);
-      console.log("NEW DESTINATION ARRAY", newDestinationArray);
-      console.log("New State", newState);
-      newState.planner[source.droppableId] = result.source;
-      newState.planner[destination.droppableId] = newDestinationArray;
+      const moduleTaken = [];
+
+      const arrKey = Object.keys(this.state.planner);
+      arrKey.splice(0, 1);
+      arrKey.forEach((key, index) => {
+        moduleTaken.push(this.state.planner[key]);
+      });
+      console.log(result.movedItem);
+      console.log(
+        checkPrereq(
+          this.state.stringToPost,
+          result.movedItem.code,
+          moduleTaken
+        ),
+        "canTake"
+      );
+
+      if (
+        checkPrereq(this.state.stringToPost, result.movedItem.code, moduleTaken)
+      ) {
+        console.log("hi im inside true");
+        newDestinationArray.push(result.movedItem);
+        console.log("NEW DESTINATION ARRAY", newDestinationArray);
+        console.log("New State", newState);
+        newState.planner[source.droppableId] = result.source;
+        newState.planner[destination.droppableId] = newDestinationArray;
+        this.setState(newState);
+      } else {
+        alert("Prerequisite not satisfied!!");
+      }
+
       // this.setState({
       //     planner: {
       //         modulesTaken: newDestinationArray,
@@ -238,8 +269,6 @@ class App extends Component {
       //     plan: result.droppable2,
       //     planner: { ...this.state.planner, y1s1: result.y1s1 },
       // });
-
-      this.setState(newState);
     }
   };
 
