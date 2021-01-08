@@ -244,11 +244,9 @@ class App extends Component {
 
             const arrKey = Object.keys(this.state.planner);
             arrKey.splice(0, 1);
-            console.log(arrKey);
             arrKey.forEach((key, index) => {
                 moduleTaken = moduleTaken.concat(this.state.planner[key]);
             });
-            console.log(moduleTaken);
 
             axios
                 .get(`${this.state.stringToPost}/${result.movedItem.code}.json`)
@@ -266,16 +264,11 @@ class App extends Component {
 
                         // check for OR
                         if (element.search("-") !== -1) {
-                            console.log("hi im inside OR");
                             const arr = element.split("-");
-                            console.log(arr);
-                            console.log(moduleTaken);
                             canTake = false;
 
                             arr.forEach((module, index) => {
                                 moduleTaken.forEach((modTaken, i) => {
-                                    console.log(modTaken);
-                                    console.log(module);
                                     canTake =
                                         canTake || modTaken.code === module;
                                 });
@@ -285,15 +278,9 @@ class App extends Component {
                                 return false;
                             }
                         } else {
-                            console.log(canTake);
-
                             // AND
                             // loop through user data
-                            console.log("hi im at AND");
-                            console.log(moduleTaken);
                             moduleTaken.forEach((modTaken, i) => {
-                                console.log(modTaken);
-                                console.log(element);
                                 if (modTaken.code === element) {
                                     canTake = true;
                                     return;
@@ -305,12 +292,11 @@ class App extends Component {
                             }
                         }
                     });
-                    console.log(canTake);
+
                     return canTake;
                 })
                 .then((bool) => {
                     if (bool) {
-                        console.log("hi im inside true");
                         newDestinationArray.push(result.movedItem);
                         console.log(
                             "NEW DESTINATION ARRAY",
@@ -483,7 +469,7 @@ class App extends Component {
                     </DragDropContext>
                 </div>
                 <div className={classes.SummaryContainer}>
-                    <SummaryContainer modules={this.state.planner}/>
+                    <SummaryContainer modules={this.state.planner} />
                 </div>
                 {/* <PlanCard /> */}
             </div>
