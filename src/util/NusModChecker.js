@@ -1,13 +1,18 @@
 import axios from "../axios.js";
 
 export const checkPrereq = (modType, moduleCode, moduleTaken) => {
+    console.log(modType);
+    console.log(moduleCode);
+    console.log(moduleTaken);
     axios
         .get(`${modType}/${moduleCode}.json`)
         .then((res) => res.data.prerequisites)
         .then((prerequisites) => {
-            if (typeof prerequisites === "string") {
+            if (prerequisites === "none") {
+                console.log("hi prereq true");
                 return true;
             }
+            console.log("hi");
 
             let canTake = false;
             const prereqArr = Object.keys(prerequisites);
