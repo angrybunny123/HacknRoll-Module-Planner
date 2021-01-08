@@ -38,8 +38,8 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 const getItemStyle = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
-    padding: 8 * 2,
-    margin: `0 ${8}px 0 0`,
+    padding: "16px",
+    margin: `0 8px 8px 8px`,
     height: `20px`,
 
     // change background colour if dragging
