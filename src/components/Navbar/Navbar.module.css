@@ -1,0 +1,17 @@
+.title {
+    font-weight: 500;
+}
+
+.button {
+    position: absolute;
+    left: 80%;
+}
+
+.button:hover {
+    opacity: 0.5;
+}
+
+.button a {
+    color: white;
+    text-decoration: none;
+}
