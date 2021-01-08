@@ -57,7 +57,7 @@ const getPlanStyle = (isDraggingOver) => ({
     overflow: "auto",
     border: "2px solid black",
     height: "450px",
-    width: "250px",
+    width: "90px",
     padding: "20px",
 });
 
@@ -97,27 +97,12 @@ class ModuleContainer extends Component {
                 "Software Engineering",
             ],
             currentField: "",
-            modules: [
-                {
-                    code: "CS1231S",
-                    credits: 4,
-                    name: "Discrete Structures",
-                    prerequisites: "none",
-                    sem: 0,
-                },
-                {
-                    code: "CS1101",
-                    credits: 4,
-                    name: "Programming Methodology",
-                    prerequisites: "none",
-                    sem: 0,
-                },
-            ],
-            plan: [],
+            modules: [],
+            plan: []
         };
         this.onDragEnd = this.onDragEnd.bind(this);
     }
-
+    
     onModuleFieldHandler = (event) => {
         this.setState({ currentField: event.target.value });
         let stringToPost = "";
@@ -166,13 +151,19 @@ class ModuleContainer extends Component {
                     this.setState({
                         modules: newModules,
                     });
-                    console.log(newModules);
                 } else {
+                    let modulesCheck = Object.values(response.data);
+                    for (let j = 0; j < modulesCheck.length; j++) {
+                        for (let i = 0; i < this.state.plan.length; i++) {
+                            if (this.state.plan[i].code === modulesCheck[j].code) {
+                                modulesCheck.splice(j, 1);
+                            }
+                        }
+                    }
                     this.setState({
-                        modules: Object.values(response.data),
+                        modules: modulesCheck
                     });
-                }
-            })
+                }})
             .catch((error) => console.log(error));
     };
 
