@@ -181,10 +181,6 @@ class ModuleContainer extends Component {
 
   getList = (id) => this.state[this.id2List[id]];
 
-  onModuleFieldHandler = (event) => {
-    this.setState({ currentField: event.target.value });
-  };
-
   onDragEnd = (result) => {
     const { source, destination } = result;
     if (!destination) {
