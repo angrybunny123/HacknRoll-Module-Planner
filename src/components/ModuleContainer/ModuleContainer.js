@@ -152,6 +152,13 @@ class ModuleContainer extends Component {
               newModules.push(electives[i]);
             }
           }
+          for (let j = 0; j < newModules.length; j++) {
+            for (let i = 0; i < this.state.plan.length; i++) {
+                if (this.state.plan[i].code === newModules[j].code) {
+                    newModules.splice(j, 1);
+                }
+            }
+        }
           this.setState({
             modules: newModules,
           });
