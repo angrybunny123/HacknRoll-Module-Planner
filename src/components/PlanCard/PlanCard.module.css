@@ -1,12 +1,21 @@
 .PlanCard {
-    width: 150px;
-    height: 150px;
-    border: 2px solid black;
+  width: 150px;
+  height: 150px;
+  border: 2px solid black;
 }
 
-.PlanDrop { 
-    width: 150px;
-    height: 150px;
-    border: 2px solid black;
-    background: cyan;
+.PlanDrop {
+  width: 150px;
+  height: 150px;
+  border: 2px solid black;
+  background: cyan;
+}
+
+.Drag {
+  border: 4px solid black;
+  opacity: 0.5;
+}
+
+.ElectiveModule {
+  background-color: rgb(153, 185, 105);
 }
