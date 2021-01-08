@@ -55,7 +55,7 @@ body {
   width: 100%;
   max-width: 768px;
   height: 100vh;
-  margin: 0 auto;
+  margin: 50px auto;
 
   padding: 15px;
 }
@@ -79,3 +79,17 @@ body {
   cursor: pointer;
   margin-bottom: 15px;
 }
+
+.ModuleContainer {
+  width: 75%;
+  float: left;
+  height: 500px;
+  box-sizing: border-box;
+}
+
+.SummaryContainer {
+  width: 25%;
+  float: right;
+  box-sizing: border-box;
+}
+

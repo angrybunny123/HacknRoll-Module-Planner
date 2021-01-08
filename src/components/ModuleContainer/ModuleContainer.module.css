@@ -1,0 +1,20 @@
+.ModuleContainer {
+    margin: 20px;
+    border: 2px solid black;
+    height: 500px;
+    padding: 20px;
+}
+
+.Dropdown {
+    width: 30%;
+    float: left;
+    text-align: center;
+}
+
+.ModulePool {
+    width: 70%;
+    float: left;
+    border: 2px solid black;
+    height: 450px;
+    padding: 20px;
+}
