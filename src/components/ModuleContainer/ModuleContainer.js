@@ -67,6 +67,7 @@ class ModuleContainer extends Component {
                             moduleCode={module.code}
                             isDragging={snapshot.isDragging}
                             elective={module.elective ? true : false}
+                            moduleName={module.name}
                           />
                         </div>
                       )}

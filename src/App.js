@@ -246,7 +246,7 @@ class App extends Component {
   render() {
     let modules;
     modules = this.state.planner.modules.map((module) => {
-      return <Module moduleCode={module.code} />;
+      return <Module moduleCode={module.code} moduleName={module.name} />;
     });
 
     let moduleFields;
