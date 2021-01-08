@@ -1,11 +1,17 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import { Counter } from "./features/counter/Counter";
-import "./App.css";
 import { Button } from "@material-ui/core";
 import axios from "./axios.js";
 
+// import classes from "./App.module.css";
+import "./App.css";
+
 import Board from "./components/Board";
 import Card from "./components/Card";
+import Module from "./components/Module/Module";
+import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
+import SummaryContainer from "./components/SummaryContainer/SummaryContainer";
+import Summary from "./components/Summary/Summary";
 
 class App extends Component {
     axiosTestPostRequest = () => {
@@ -44,23 +50,16 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <header className="App-header">
-                    <h2>Hackathon Module Planner Template</h2>
-                    <Counter />
-                    <Button color="primary" onClick={this.axiosTestPostRequest}>
-                        POST DUMMY MODULE
-                    </Button>
-                    <Button color="primary" onClick={this.axiosTestGetRequest}>
-                        GET ALL MODULES
-                    </Button>
-                    <Button color="primary" onClick={this.axiosGetNusMods}>
-                        GET CS2040S
-                    </Button>
-                </header>
+                <div className="ModuleContainer">
+                    <ModuleContainer />
+                </div>
+                <div className="SummaryContainer">
+                    <SummaryContainer />
+                </div>
                 <main className="flexbox">
                     <Board id="board-1" className="board">
                         <Card id="card-1" className="card" draggable="true">
-                            <p>card one</p>
+                            <Module moduleCode="CS3230" />
                         </Card>
                     </Board>
                     <Board id="board-2" className="board">
