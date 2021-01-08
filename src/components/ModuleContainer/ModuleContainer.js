@@ -57,7 +57,7 @@ const getPlanStyle = (isDraggingOver) => ({
     overflow: "auto",
     border: "2px solid black",
     height: "450px",
-    width: "250px",
+    width: "90px",
     padding: "20px",
 });
 
@@ -97,22 +97,7 @@ class ModuleContainer extends Component {
                 "Software Engineering",
             ],
             currentField: "",
-            modules: [
-                {
-                    code: "CS1231S",
-                    credits: 4,
-                    name: "Discrete Structures",
-                    prerequisites: "none",
-                    sem: 0,
-                },
-                {
-                    code: "CS1101",
-                    credits: 4,
-                    name: "Programming Methodology",
-                    prerequisites: "none",
-                    sem: 0,
-                },
-            ],
+            modules: [],
             plan: [],
         };
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -127,6 +112,10 @@ class ModuleContainer extends Component {
             stringToPost = "mathscience";
         } else if (event.target.value === "IT Professionalism") {
             stringToPost = "itprofessionalism";
+        } else if (event.target.value === "University Level Requirements") {
+            stringToPost = "unrestrictedelectives";
+        } else if (event.target.value === "Unrestricted Electives") {
+            stringToPost = "universitylevelrequirements";
         } else if (event.target.value === "Team Project") {
             stringToPost = "teamproject";
         } else if (event.target.value === "Industrial Experience") {
@@ -163,13 +152,32 @@ class ModuleContainer extends Component {
                             newModules.push(electives[i]);
                         }
                     }
+                    for (let j = 0; j < newModules.length; j++) {
+                        for (let i = 0; i < this.state.plan.length; i++) {
+                            if (
+                                this.state.plan[i].code === newModules[j].code
+                            ) {
+                                newModules.splice(j, 1);
+                            }
+                        }
+                    }
                     this.setState({
                         modules: newModules,
                     });
                     console.log(newModules);
                 } else {
+                    let modulesCheck = Object.values(response.data);
+                    for (let j = 0; j < modulesCheck.length; j++) {
+                        for (let i = 0; i < this.state.plan.length; i++) {
+                            if (
+                                this.state.plan[i].code === modulesCheck[j].code
+                            ) {
+                                modulesCheck.splice(j, 1);
+                            }
+                        }
+                    }
                     this.setState({
-                        modules: Object.values(response.data),
+                        modules: modulesCheck,
                     });
                 }
             })
@@ -241,7 +249,6 @@ class ModuleContainer extends Component {
 
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
-                <h1>Modules</h1>
                 <div className={classes.ModuleContainer}>
                     <div className={classes.Dropdown}>
                         <TextField
@@ -288,7 +295,6 @@ class ModuleContainer extends Component {
                         )}
                     </Droppable>
                 </div>
-
                 <div className={classes.PlanCardContainer}>
                     <Droppable droppableId="droppable2" direction="vertical">
                         {(provided, snapshot) => (
