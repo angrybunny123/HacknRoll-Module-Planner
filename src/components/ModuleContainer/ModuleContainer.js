@@ -52,6 +52,8 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 const getPlanStyle = (isDraggingOver) => ({
     background: isDraggingOver ? "lightblue" : "lightgrey",
     display: "flex",
+    flexWrap: "wrap",
+    alignContent: "flex-start",
     padding: 8,
     overflow: "auto",
     border: "2px solid black",
@@ -64,7 +66,8 @@ const getListStyle = (isDraggingOver) => ({
     background: isDraggingOver ? "lightblue" : "lightgrey",
     display: "flex",
     padding: 8,
-    overflow: "auto",
+    flexWrap: "wrap",
+    alignContent: "flex-start",
     border: "2px solid black",
     width: "70%",
     float: "left",
@@ -195,11 +198,11 @@ class ModuleContainer extends Component {
                 destination.index
             );
 
-            if (source.droppableId === "droppable2") {
-                this.setState({ plan: newModules });
-            } else {
-                this.setState({ modules: newModules }); //maybe no need this cause we dont have to reorder in the all-module section
-            }
+            // if (source.droppableId === "droppable2") {
+            //     this.setState({ plan: newModules });
+            // } else {
+            //     this.setState({ modules: newModules }); //maybe no need this cause we dont have to reorder in the all-module section
+            // }
         } else {
             const result = move(
                 this.getList(source.droppableId),
