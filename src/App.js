@@ -94,9 +94,9 @@ class App extends Component {
                 const values = Object.entries(res.data.data);
                 const newState = JSON.parse(JSON.stringify(this.state));
                 console.log(values);
-                values.forEach(value => { 
+                values.forEach((value) => {
                     // console.log(newState.planner.value[0]);
-                    newState.planner[value[0]] = value[1]
+                    newState.planner[value[0]] = value[1];
                     // console.log(this.state.planner[value[0]]);
                     // console.log(value[0]);
                     // console.log("DestinationArray", newDestinationArray);
@@ -104,11 +104,10 @@ class App extends Component {
                 this.setState(newState);
                 console.log("newState", newState);
             })
-            
+
             .catch((err) => {
                 console.log(err.message);
             });
-            
     }
 
     onSaveHandler = () => {
@@ -116,14 +115,16 @@ class App extends Component {
         let data = {
             data: this.state.planner,
         };
-        axios
-            .patch(`/userdata/${userId}.json`, data)
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((err) => {
-                console.log(err.message);
-            });
+        if (userId !== null) {
+            axios
+                .patch(`/userdata/${userId}.json`, data)
+                .then((res) => {
+                    console.log(res.data);
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
+        }
     };
 
     onModuleFieldHandler = (event) => {
@@ -280,7 +281,7 @@ class App extends Component {
             let newDestinationArray = [
                 ...this.state.planner[destination.droppableId],
             ];
-          
+
             let moduleTaken = [];
 
             const arrKey = Object.keys(this.state.planner);
@@ -291,23 +292,22 @@ class App extends Component {
 
             let getlink = "";
             if (this.state.stringToPost.includes("focusareas")) {
-                console.log("hi im in focusarea")
+                console.log("hi im in focusarea");
                 getlink = `${this.state.stringToPost}/primaries/${result.movedItem.code}.json`;
-                    axios
+                axios
                     .get(getlink)
                     .then((res) => res.data.prerequisites)
                     .then((prerequisites) => {
-                       
                         if (prerequisites === "none") {
                             return true;
                         }
-    
+
                         let canTake = false;
                         const prereqArr = Object.keys(prerequisites);
-    
+
                         prereqArr.forEach((element) => {
                             // check with user data
-    
+
                             // check for OR
                             if (element.search("-") !== -1) {
                                 console.log("hi im inside OR");
@@ -315,7 +315,7 @@ class App extends Component {
                                 console.log(arr);
                                 console.log(moduleTaken);
                                 canTake = false;
-    
+
                                 arr.forEach((module, index) => {
                                     moduleTaken.forEach((modTaken, i) => {
                                         console.log(modTaken);
@@ -324,13 +324,13 @@ class App extends Component {
                                             canTake || modTaken.code === module;
                                     });
                                 });
-    
+
                                 if (!canTake) {
                                     return false;
                                 }
                             } else {
                                 console.log(canTake);
-    
+
                                 // AND
                                 // loop through user data
                                 console.log("hi im at AND");
@@ -343,7 +343,7 @@ class App extends Component {
                                         return;
                                     }
                                 });
-    
+
                                 if (!canTake) {
                                     return false;
                                 }
@@ -361,7 +361,8 @@ class App extends Component {
                                 newDestinationArray
                             );
                             console.log("New State", newState);
-                            newState.planner[source.droppableId] = result.source;
+                            newState.planner[source.droppableId] =
+                                result.source;
                             newState.planner[
                                 destination.droppableId
                             ] = newDestinationArray;
@@ -371,174 +372,174 @@ class App extends Component {
                         }
                     })
                     .catch((err) => {
-                         getlink = `${this.state.stringToPost}/electives/${result.movedItem.code}.json`;
-                         axios
-                         .get(getlink)
-                         .then((res) => res.data.prerequisites)
-                         .then((prerequisites) => {
-                            
-                             if (prerequisites === "none") {
-                                 return true;
-                             }
-         
-                             let canTake = false;
-                             const prereqArr = Object.keys(prerequisites);
-         
-                             prereqArr.forEach((element) => {
-                                 // check with user data
-         
-                                 // check for OR
-                                 if (element.search("-") !== -1) {
-                                     console.log("hi im inside OR");
-                                     const arr = element.split("-");
-                                     console.log(arr);
-                                     console.log(moduleTaken);
-                                     canTake = false;
-         
-                                     arr.forEach((module, index) => {
-                                         moduleTaken.forEach((modTaken, i) => {
-                                             console.log(modTaken);
-                                             console.log(module);
-                                             canTake =
-                                                 canTake || modTaken.code === module;
-                                         });
-                                     });
-         
-                                     if (!canTake) {
-                                         return false;
-                                     }
-                                 } else {
-                                     console.log(canTake);
-         
-                                     // AND
-                                     // loop through user data
-                                     console.log("hi im at AND");
-                                     console.log(moduleTaken);
-                                     moduleTaken.forEach((modTaken, i) => {
-                                         console.log(modTaken);
-                                         console.log(element);
-                                         if (modTaken.code === element) {
-                                             canTake = true;
-                                             return;
-                                         }
-                                     });
-         
-                                     if (!canTake) {
-                                         return false;
-                                     }
-                                 }
-                             });
-                             console.log(canTake);
-                             return canTake;
-                         })
-                         .then((bool) => {
-                             if (bool) {
-                                 console.log("hi im inside true");
-                                 newDestinationArray.push(result.movedItem);
-                                 console.log(
-                                     "NEW DESTINATION ARRAY",
-                                     newDestinationArray
-                                 );
-                                 console.log("New State", newState);
-                                 newState.planner[source.droppableId] = result.source;
-                                 newState.planner[
-                                     destination.droppableId
-                                 ] = newDestinationArray;
-                                 this.setState(newState);
-                             } else {
-                                 alert("Prerequisite not satisfied!!");
-                             }
-                         })
-                         .catch((err) => console.log(err));
+                        getlink = `${this.state.stringToPost}/electives/${result.movedItem.code}.json`;
+                        axios
+                            .get(getlink)
+                            .then((res) => res.data.prerequisites)
+                            .then((prerequisites) => {
+                                if (prerequisites === "none") {
+                                    return true;
+                                }
+
+                                let canTake = false;
+                                const prereqArr = Object.keys(prerequisites);
+
+                                prereqArr.forEach((element) => {
+                                    // check with user data
+
+                                    // check for OR
+                                    if (element.search("-") !== -1) {
+                                        console.log("hi im inside OR");
+                                        const arr = element.split("-");
+                                        console.log(arr);
+                                        console.log(moduleTaken);
+                                        canTake = false;
+
+                                        arr.forEach((module, index) => {
+                                            moduleTaken.forEach(
+                                                (modTaken, i) => {
+                                                    console.log(modTaken);
+                                                    console.log(module);
+                                                    canTake =
+                                                        canTake ||
+                                                        modTaken.code ===
+                                                            module;
+                                                }
+                                            );
+                                        });
+
+                                        if (!canTake) {
+                                            return false;
+                                        }
+                                    } else {
+                                        console.log(canTake);
+
+                                        // AND
+                                        // loop through user data
+                                        console.log("hi im at AND");
+                                        console.log(moduleTaken);
+                                        moduleTaken.forEach((modTaken, i) => {
+                                            console.log(modTaken);
+                                            console.log(element);
+                                            if (modTaken.code === element) {
+                                                canTake = true;
+                                                return;
+                                            }
+                                        });
+
+                                        if (!canTake) {
+                                            return false;
+                                        }
+                                    }
+                                });
+                                console.log(canTake);
+                                return canTake;
+                            })
+                            .then((bool) => {
+                                if (bool) {
+                                    console.log("hi im inside true");
+                                    newDestinationArray.push(result.movedItem);
+                                    console.log(
+                                        "NEW DESTINATION ARRAY",
+                                        newDestinationArray
+                                    );
+                                    console.log("New State", newState);
+                                    newState.planner[source.droppableId] =
+                                        result.source;
+                                    newState.planner[
+                                        destination.droppableId
+                                    ] = newDestinationArray;
+                                    this.setState(newState);
+                                } else {
+                                    alert("Prerequisite not satisfied!!");
+                                }
+                            })
+                            .catch((err) => console.log(err));
                     });
-                
             } else {
                 getlink = `${this.state.stringToPost}/${result.movedItem.code}.json`;
                 axios
-                .get(getlink)
-                .then((res) => res.data.prerequisites)
-                .then((prerequisites) => {
-                   
-                    if (prerequisites === "none") {
-                        return true;
-                    }
-
-                    let canTake = false;
-                    const prereqArr = Object.keys(prerequisites);
-
-                    prereqArr.forEach((element) => {
-                        // check with user data
-
-                        // check for OR
-                        if (element.search("-") !== -1) {
-                            const arr = element.split("-");
-                            canTake = false;
-
-                            arr.forEach((module, index) => {
-                                moduleTaken.forEach((modTaken, i) => {
-                                    canTake =
-                                        canTake || modTaken.code === module;
-                                });
-                            });
-
-                            if (!canTake) {
-                                return false;
-                            }
-                        } else {
-                            // AND
-                            // loop through user data
-                            moduleTaken.forEach((modTaken, i) => {
-                                if (modTaken.code === element) {
-                                    canTake = true;
-                                    return;
-                                }
-                            });
-
-                            if (!canTake) {
-                                return false;
-                            }
+                    .get(getlink)
+                    .then((res) => res.data.prerequisites)
+                    .then((prerequisites) => {
+                        if (prerequisites === "none") {
+                            return true;
                         }
-                    });
 
-                    return canTake;
-                })
-                .then((bool) => {
-                    if (bool) {
-                        newDestinationArray.push(result.movedItem);
-                        console.log(
-                            "NEW DESTINATION ARRAY",
-                            newDestinationArray
-                        );
-                        console.log("New State", newState);
-                        newState.planner[source.droppableId] = result.source;
-                        newState.planner[
-                            destination.droppableId
-                        ] = newDestinationArray;
-                        console.log("Brand new state", newState);
-                        this.setState(newState);
-                    } else {
-                        alert("Prerequisite not satisfied!!");
-                    }
-                })
-                .catch((err) => console.log(err));
+                        let canTake = false;
+                        const prereqArr = Object.keys(prerequisites);
+
+                        prereqArr.forEach((element) => {
+                            // check with user data
+
+                            // check for OR
+                            if (element.search("-") !== -1) {
+                                const arr = element.split("-");
+                                canTake = false;
+
+                                arr.forEach((module, index) => {
+                                    moduleTaken.forEach((modTaken, i) => {
+                                        canTake =
+                                            canTake || modTaken.code === module;
+                                    });
+                                });
+
+                                if (!canTake) {
+                                    return false;
+                                }
+                            } else {
+                                // AND
+                                // loop through user data
+                                moduleTaken.forEach((modTaken, i) => {
+                                    if (modTaken.code === element) {
+                                        canTake = true;
+                                        return;
+                                    }
+                                });
+
+                                if (!canTake) {
+                                    return false;
+                                }
+                            }
+                        });
+
+                        return canTake;
+                    })
+                    .then((bool) => {
+                        if (bool) {
+                            newDestinationArray.push(result.movedItem);
+                            console.log(
+                                "NEW DESTINATION ARRAY",
+                                newDestinationArray
+                            );
+                            console.log("New State", newState);
+                            newState.planner[source.droppableId] =
+                                result.source;
+                            newState.planner[
+                                destination.droppableId
+                            ] = newDestinationArray;
+                            console.log("Brand new state", newState);
+                            this.setState(newState);
+                        } else {
+                            alert("Prerequisite not satisfied!!");
+                        }
+                    })
+                    .catch((err) => console.log(err));
             }
-            }
+        }
 
-            
+        // this.setState({
+        //     planner: {
+        //         modulesTaken: newDestinationArray,
+        //     }
+        // })
 
-
-            // this.setState({
-            //     planner: {
-            //         modulesTaken: newDestinationArray,
-            //     }
-            // })
-
-            // this.setState({
-            //     modules: result.droppable,
-            //     plan: result.droppable2,
-            //     planner: { ...this.state.planner, y1s1: result.y1s1 },
-            // });
-        };
+        // this.setState({
+        //     modules: result.droppable,
+        //     plan: result.droppable2,
+        //     planner: { ...this.state.planner, y1s1: result.y1s1 },
+        // });
+    };
 
     render() {
         let modules;
@@ -693,9 +694,10 @@ class App extends Component {
                     <Button onClick={this.onSaveHandler}>SAVE</Button>
                 </div>
                 <div className={classes.SummaryContainer}>
-                    <SummaryContainer 
-                        modules={this.state.planner} 
-                        totalCredits={totalCredits(this.state.planner)}/>
+                    <SummaryContainer
+                        modules={this.state.planner}
+                        totalCredits={totalCredits(this.state.planner)}
+                    />
                 </div>
                 {/* <PlanCard /> */}
             </div>
@@ -713,15 +715,13 @@ function creditsPerSem(yearSem) {
 
 function totalCredits(planner) {
     let credits = 0;
-    Object.entries(planner).forEach(
-        ([yearSem, mods]) => {
-            if (yearSem !== "modules") {
-                for ( let i = 0; i < mods.length; i++) {
-                    credits = credits + mods[i].credits;
-                }
+    Object.entries(planner).forEach(([yearSem, mods]) => {
+        if (yearSem !== "modules") {
+            for (let i = 0; i < mods.length; i++) {
+                credits = credits + mods[i].credits;
             }
         }
-    );
+    });
     return credits;
 }
 
