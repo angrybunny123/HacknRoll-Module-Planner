@@ -1,7 +1,13 @@
-.PlanCard {
-  width: 150px;
-  height: 150px;
-  border: 2px solid black;
+.PlanCardContainer {
+  margin: 0px 20px 0px 20px;
+  text-align: center;
+}
+
+.PlanCardContainer p {
+  font-size: 40px;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
 }
 
 .PlanDrop {
