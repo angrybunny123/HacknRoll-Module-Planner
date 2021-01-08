@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "../../axios.js";
 
 import classes from "./ModuleContainer.module.css";
-import { TextField, InputLabel, Select, MenuItem } from "@material-ui/core";
+import { TextField, MenuItem } from "@material-ui/core";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import Module from "../Module/Module";
@@ -38,8 +38,8 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the items look a bit nicer
   userSelect: "none",
-  padding: 8 * 2,
-  margin: `0 ${8}px 0 0`,
+  padding: "16px",
+  margin: `0 8px 8px 8px`,
   height: `20px`,
 
   // change background colour if dragging
@@ -54,7 +54,6 @@ const getPlanStyle = (isDraggingOver) => ({
   display: "flex",
   flexWrap: "wrap",
   alignContent: "flex-start",
-  padding: 8,
   overflow: "auto",
   border: "2px solid black",
   height: "450px",
@@ -65,7 +64,6 @@ const getPlanStyle = (isDraggingOver) => ({
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
   display: "flex",
-  padding: 8,
   flexWrap: "wrap",
   alignContent: "flex-start",
   border: "2px solid black",
