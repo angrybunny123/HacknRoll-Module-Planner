@@ -87,6 +87,7 @@ class ModuleContainer extends Component {
                 y3s2: [],
                 y4s1: [],
                 y4s2: [],
+                
             },
         };
         this.onDragEnd = this.onDragEnd.bind(this);
