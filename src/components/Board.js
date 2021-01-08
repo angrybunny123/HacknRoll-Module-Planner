@@ -1,12 +1,7 @@
 import React from "react";
 
-<<<<<<< HEAD
-function Board(props) {
+const Board = (props) => {
     const drop = (e) => {
-=======
-const Board = (props) => { 
-    const drop = e => { 
->>>>>>> 4cb130b9dd587f4811736ab81fa02da23cbc766c
         e.preventDefault();
         const card_id = e.dataTransfer.getData("card_id");
 
@@ -31,6 +26,6 @@ const Board = (props) => {
             {props.children}
         </div>
     );
-}
+};
 
 export default Board;
