@@ -52,9 +52,23 @@ const getListStyle = (isDraggingOver) => ({
     background: isDraggingOver ? "lightblue" : "lightgrey",
     display: "flex",
     padding: 8,
-    width: "200px",
     overflow: "auto",
     border: "2px solid black",
+    width: "70%",
+    float: "left",
+    height: "450px",
+    padding: "20px",
+});
+
+const getPlanStyle = (isDraggingOver) => ({
+    background: isDraggingOver ? "lightblue" : "lightgrey",
+    display: "flex",
+    padding: 8,
+    overflow: "auto",
+    border: "2px solid black",
+    height: "450px",
+    width: "250px",
+    padding: "20px",
 });
 
 class ModuleContainer extends Component {
@@ -144,19 +158,19 @@ class ModuleContainer extends Component {
         console.log(modules);
 
         return (
-            <div className={classes.ModuleContainer}>
-                <div className={classes.Dropdown}>
-                    <TextField
-                        id="standard-select-field"
-                        select
-                        value={this.state.currentField}
-                        onChange={this.onModuleFieldHandler}
-                        helperText="Please select your area of interest"
-                    >
-                        {moduleFields}
-                    </TextField>
-                </div>
-                <DragDropContext onDragEnd={this.onDragEnd}>
+            <DragDropContext onDragEnd={this.onDragEnd}>
+                <div className={classes.ModuleContainer}>
+                    <div className={classes.Dropdown}>
+                        <TextField
+                            id="standard-select-field"
+                            select
+                            value={this.state.currentField}
+                            onChange={this.onModuleFieldHandler}
+                            helperText="Please select your area of interest"
+                        >
+                            {moduleFields}
+                        </TextField>
+                    </div>
                     <Droppable droppableId="droppable" direction="horizontal">
                         {(provided, snapshot) => (
                             <div
@@ -190,11 +204,13 @@ class ModuleContainer extends Component {
                             </div>
                         )}
                     </Droppable>
+                </div>
+                <div className={classes.PlanCardContainer}>
                     <Droppable droppableId="droppable2" direction="vertical">
                         {(provided, snapshot) => (
                             <div
                                 ref={provided.innerRef}
-                                style={getListStyle(snapshot.isDraggingOver)}
+                                style={getPlanStyle(snapshot.isDraggingOver)}
                             >
                                 {this.state.plan
                                     ? this.state.plan.map((module, index) => (
@@ -225,8 +241,8 @@ class ModuleContainer extends Component {
                             </div>
                         )}
                     </Droppable>
-                </DragDropContext>
-            </div>
+                </div>
+            </DragDropContext>
         );
     }
 }
