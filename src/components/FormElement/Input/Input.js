@@ -59,11 +59,11 @@ const Input = (props) => {
 
     return (
         <div className={classes.Input}>
-            <label classNAme={classes.Label}>{props.label}</label>
+            <label className={classes.Label}>{props.label}</label>
             {inputElement}
         </div>
     );
 };
 
 
-export default input;
+export default Input;

@@ -1,6 +1,15 @@
 .Module {
+    height: 40px;
+    width: 100px;
     padding: 2px;
     background-color: grey;
+    border: 2px solid black;
     box-sizing: border-box;
     border-radius: 3px;
+    margin: 3px;
+}
+
+.Module h {
+    font-size: 20px;
+    font-weight: 500px;
 }

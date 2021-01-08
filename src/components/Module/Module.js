@@ -5,9 +5,9 @@ import classes from "./Module.module.css";
 const Module = (props) => {
     return (
         <div className={classes.Module}>
-            <h1>
+            <h>
                 {props.moduleCode}
-            </h1>
+            </h>
         </div>
     );
 }

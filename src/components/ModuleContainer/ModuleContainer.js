@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 
 import classes from "./ModuleContainer.module.css";
+import { TextField, InputLabel, Select, MenuItem } from "@material-ui/core";
 
 import Module from "../Module/Module";
+import Input from "../FormElement/Input/Input";
 import Card from "../Card";
 import Board from "../Board";
 
 class ModuleContainer extends Component {
     state = {
+        dropdown: ["Foundation", "Math and Science", "IT Professionalism"],
+        currentField: "",
         modules: [
             {
                 code: "CS1231",
@@ -22,6 +26,10 @@ class ModuleContainer extends Component {
         ],
     };
 
+    onModuleFieldHandler = (event) => {
+        this.setState({ currentField: event.target.value });
+    };
+
     render() {
         let modules;
         modules = this.state.modules.map((module) => {
@@ -34,14 +42,31 @@ class ModuleContainer extends Component {
             );
         });
 
+        let moduleFields;
+        moduleFields = this.state.dropdown.map((field) => {
+            return (
+                <MenuItem key={field} value={field}>
+                    {field}
+                </MenuItem>
+            );
+        });
+
         console.log(modules);
 
         return (
-            <div>
-                <div>
-                    <h3>dropdown</h3>
+            <div className={classes.ModuleContainer}>
+                <div className={classes.Dropdown}>
+                    <TextField
+                        id="standard-select-field"
+                        select
+                        value={this.state.currentField}
+                        onChange={this.onModuleFieldHandler}
+                        helperText="Please select your area of interest"
+                    >
+                        {moduleFields}
+                    </TextField>
                 </div>
-                <div>
+                <div className={classes.ModulePool}>
                     <label>Modules</label>
                     {modules}
                 </div>
