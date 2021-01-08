@@ -483,7 +483,7 @@ class App extends Component {
                     </DragDropContext>
                 </div>
                 <div className={classes.SummaryContainer}>
-                    <SummaryContainer />
+                    <SummaryContainer modules={this.state.planner}/>
                 </div>
                 {/* <PlanCard /> */}
             </div>
