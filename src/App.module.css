@@ -1,21 +1,43 @@
-.ModuleContainer {
-  width: 75%;
-  float: left;
-  height: 500px;
-  box-sizing: border-box;
-}
-
 .SummaryContainer {
   width: 25%;
   float: right;
   box-sizing: border-box;
   text-align: center;
+  border: 2px solid black;
 }
 
-.Container {
-  width: 200px;
-  height: 200px;
-  background-color: aqua;
+.ModuleContainer {
+  width: 75%;
+  float: left;
+  display: block;
+  box-sizing: border-box;
   border: 2px solid black;
-  touch-action: none;
+  padding: 20px;
 }
+
+.Dropdown {
+  width: 30%;
+  float: left;
+  text-align: center;
+}
+
+.SelectionContainer {
+  display: block;
+  border: 2px solid black;
+}
+
+.ModulePool {
+  width: 70%;
+  float: right;
+  text-align: center;
+}
+
+.PlanCardContainer {
+  margin: 20px;
+  border: 2px solid black;
+  display: flex;
+  height: 500px;
+  padding: 20px;
+  overflow: auto;
+}
+
