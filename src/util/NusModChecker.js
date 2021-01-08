@@ -1,7 +1,5 @@
 import axios from "../axios.js";
 
-const getUserData = () => console.log("user data");
-
 export const checkPrereq = (modType, moduleCode, moduleTaken) => {
     axios
         .get(`${modType}/${moduleCode}.json`)
