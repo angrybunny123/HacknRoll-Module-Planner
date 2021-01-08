@@ -1,0 +1,6 @@
+.Module {
+    padding: 2px;
+    background-color: grey;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
