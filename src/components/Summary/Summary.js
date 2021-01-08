@@ -1,6 +1,7 @@
 import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
+import App from "../../App";
 
 const useStyles = makeStyles((theme) => ({
     label: {
@@ -100,6 +101,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Summary = (props) => {
+    let planner = props.module;
+    console.log(planner);
     const calculateMcNeeded = () => {
         if (props.label === "Foundation") {
             return 36;
@@ -118,7 +121,124 @@ const Summary = (props) => {
         } else if (props.label === "University Level Requirements") {
             return 20;
         }
+    
     };
+
+    const calculateMcTaken = () => { 
+        if (props.label == "Foundation") {
+        let modsTaken = 0;
+        Object.entries(planner).forEach(
+            ([yearSem, modulesTookEachSem]) => {
+                if (yearSem !== "modules") {
+                    for (let i = 0; i < modulesTookEachSem.length; i++) {
+                        if (modulesTookEachSem[i].type.includes("foundation")) {
+                            modsTaken += 4;
+                        }
+                    }
+                }
+            })
+        return modsTaken;
+        }
+        else if (props.label == "Focus Area") {
+            let modsTaken = 0;
+            Object.entries(planner).forEach(
+                ([yearSem, modulesTookEachSem]) => {
+                    if (yearSem !== "modules") {
+                        for (let i = 0; i < modulesTookEachSem.length; i++) {
+                            if (modulesTookEachSem[i].type.includes("focusarea")) {
+                                modsTaken += 4;
+                            }
+                        }
+                    }
+                })
+            return modsTaken;
+        }
+        else if (props.label == "Math and Science") {
+            let modsTaken = 0;
+            Object.entries(planner).forEach(
+                ([yearSem, modulesTookEachSem]) => {
+                    if (yearSem !== "modules") {
+                        for (let i = 0; i < modulesTookEachSem.length; i++) {
+                            if (modulesTookEachSem[i].type.includes("mathscience")) {
+                                modsTaken += 4;
+                            }
+                        }
+                    }
+                })
+            return modsTaken;
+        }
+        else if (props.label == "IT Professionalism") {
+            let modsTaken = 0;
+            Object.entries(planner).forEach(
+                ([yearSem, modulesTookEachSem]) => {
+                    if (yearSem !== "modules") {
+                        for (let i = 0; i < modulesTookEachSem.length; i++) {
+                            if (modulesTookEachSem[i].type.includes("itprofessionalism")) {
+                                modsTaken += 4;
+                            }
+                        }
+                    }
+                })
+            return modsTaken;
+        }
+        else if (props.label == "Industrial Experience") {
+            let modsTaken = 0;
+            Object.entries(planner).forEach(
+                ([yearSem, modulesTookEachSem]) => {
+                    if (yearSem !== "modules") {
+                        for (let i = 0; i < modulesTookEachSem.length; i++) {
+                            if (modulesTookEachSem[i].type.includes("industrial")) {
+                                modsTaken += 4;
+                            }
+                        }
+                    }
+                })
+            return modsTaken;
+        }
+        else if (props.label == "Team Project") {
+            let modsTaken = 0;
+            Object.entries(planner).forEach(
+                ([yearSem, modulesTookEachSem]) => {
+                    if (yearSem !== "modules") {
+                        for (let i = 0; i < modulesTookEachSem.length; i++) {
+                            if (modulesTookEachSem[i].type.includes("teamproject")) {
+                                modsTaken += 4;
+                            }
+                        }
+                    }
+                })
+            return modsTaken;
+        }
+        else if (props.label == "Unrestricted Electives") {
+            let modsTaken = 0;
+            Object.entries(planner).forEach(
+                ([yearSem, modulesTookEachSem]) => {
+                    if (yearSem !== "modules") {
+                        for (let i = 0; i < modulesTookEachSem.length; i++) {
+                            if (modulesTookEachSem[i].type.includes("ue")) {
+                                modsTaken += 4;
+                            }
+                        }
+                    }
+                })
+            return modsTaken;
+        }
+        else if (props.label == "University Level Requirements") {
+            let modsTaken = 0;
+            Object.entries(planner).forEach(
+                ([yearSem, modulesTookEachSem]) => {
+                    if (yearSem !== "modules") {
+                        for (let i = 0; i < modulesTookEachSem.length; i++) {
+                            if (modulesTookEachSem[i].type.includes("ulr")) {
+                                modsTaken += 4;
+                            }
+                        }
+                    }
+                })
+            return modsTaken;
+        }
+    }
+
     const classes = useStyles();
 
     return (
@@ -150,7 +270,7 @@ const Summary = (props) => {
                     <br />
                     MCs Needed: {calculateMcNeeded()}
                     <br />
-                    MCs Taken: {0}
+                    MCs Taken: {calculateMcTaken()}
                 </label>
             </div>
         </Paper>

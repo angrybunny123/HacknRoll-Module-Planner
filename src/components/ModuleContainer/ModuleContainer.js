@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import axios from "../../axios.js";
 
 import classes from "./ModuleContainer.module.css";
-import { TextField, MenuItem } from "@material-ui/core";
+import { TextField, MenuItem, Button } from "@material-ui/core";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
 import Module from "../Module/Module";
@@ -42,7 +42,16 @@ class ModuleContainer extends Component {
           >
             {moduleFields}
           </TextField>
+          <a
+            href="https://www.comp.nus.edu.sg/cugresource/per-cohort/cs/cs-19-20/"
+            target="_blank"
+          >
+            <Button style={{ marginTop: "220px" }}>
+              Graduating Requirements
+            </Button>
+          </a>
         </div>
+
         <Droppable droppableId="modules" direction="horizontal">
           {(provided, snapshot) => (
             <div

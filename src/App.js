@@ -79,7 +79,6 @@ class App extends Component {
         y4s2: [],
       },
       stringToPost: "",
-      loading: false,
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
@@ -147,7 +146,6 @@ class App extends Component {
               }
             );
           }
-
           this.setState({
             planner: { ...this.state.planner, modules: newModules },
           });
@@ -244,19 +242,19 @@ class App extends Component {
         "canTake"
       );
 
-      if (
-        checkPrereq(this.state.stringToPost, result.movedItem.code, moduleTaken)
-      ) {
-        console.log("hi im inside true");
-        newDestinationArray.push(result.movedItem);
-        console.log("NEW DESTINATION ARRAY", newDestinationArray);
-        console.log("New State", newState);
-        newState.planner[source.droppableId] = result.source;
-        newState.planner[destination.droppableId] = newDestinationArray;
-        this.setState(newState);
-      } else {
-        alert("Prerequisite not satisfied!!");
-      }
+      //   if (
+      //     checkPrereq(this.state.stringToPost, result.movedItem.code, moduleTaken)
+      //   ) {
+      //     console.log("hi im inside true");
+      //     newDestinationArray.push(result.movedItem);
+      //     console.log("NEW DESTINATION ARRAY", newDestinationArray);
+      //     console.log("New State", newState);
+      //     newState.planner[source.droppableId] = result.source;
+      //     newState.planner[destination.droppableId] = newDestinationArray;
+      //     this.setState(newState);
+      //   } else {
+      //     alert("Prerequisite not satisfied!!");
+      //   }
 
       // this.setState({
       //     planner: {
@@ -275,7 +273,7 @@ class App extends Component {
   render() {
     let modules;
     modules = this.state.planner.modules.map((module) => {
-      return <Module moduleCode={module.code} moduleName={module.name} />;
+      return <Module moduleCode={module.code} />;
     });
 
     let moduleFields;
@@ -288,79 +286,10 @@ class App extends Component {
     });
     return (
       <div>
+        <h1>NUS COMPUTER SCIENCE DEGREE PLANNER</h1>
         <div className={classes.ModuleContainer}>
           <DragDropContext onDragEnd={this.onDragEnd}>
             <div className={classes.SelectionContainer}>
-              {/* <div className={classes.Dropdown}>
-                                <TextField
-                                    id="standard-select-field"
-                                    select
-                                    value={this.state.currentField}
-                                    onChange={this.onModuleFieldHandler}
-                                    helperText="Please select your area of interest"
-                                >
-                                    {moduleFields}
-                                </TextField>
-                            </div>
-                            <div className={classes.ModulePool}> */}
-              {/* <Droppable
-                                    droppableId="modules"
-                                    direction="horizontal"
-                                >
-                                    {(provided, snapshot) => (
-                                        <div
-                                            ref={provided.innerRef}
-                                            style={getListStyle(
-                                                snapshot.isDraggingOver
-                                            )}
-                                            {...provided.droppableProps}
-                                        >
-                                            {this.state.planner.modules
-                                                ? this.state.planner.modules.map(
-                                                      (module, index) => (
-                                                          <Draggable
-                                                              key={module.code}
-                                                              draggableId={
-                                                                  module.code
-                                                              }
-                                                              index={index}
-                                                          >
-                                                              {(
-                                                                  provided,
-                                                                  snapshot
-                                                              ) => (
-                                                                  <div
-                                                                      ref={
-                                                                          provided.innerRef
-                                                                      }
-                                                                      {...provided.draggableProps}
-                                                                      {...provided.dragHandleProps}
-                                                                  >
-                                                                      <Module
-                                                                          moduleCode={
-                                                                              module.code
-                                                                          }
-                                                                          isDragging={
-                                                                              snapshot.isDragging
-                                                                          }
-                                                                          elective={
-                                                                              module.elective
-                                                                                  ? true
-                                                                                  : false
-                                                                          }
-                                                                      />
-                                                                  </div>
-                                                              )}
-                                                          </Draggable>
-                                                      )
-                                                  )
-                                                : null}
-                                            {provided.placeholder}
-                                        </div>
-                                    )}
-                                </Droppable> */}
-              {/* </div> */}
-
               <ModuleContainer
                 moduleFields={this.state.dropdown}
                 value={this.state.currentField}
@@ -413,7 +342,7 @@ class App extends Component {
           </DragDropContext>
         </div>
         <div className={classes.SummaryContainer}>
-          <SummaryContainer />
+          <SummaryContainer modules={this.state.planner} />
         </div>
         {/* <PlanCard /> */}
       </div>
