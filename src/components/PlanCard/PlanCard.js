@@ -27,7 +27,7 @@ const getPlanStyle = (isDraggingOver) => ({
     overflow: "auto",
     border: "2px solid black",
     height: "450px",
-    width: "250px",
+    width: "90px",
     padding: "20px",
 });
 
