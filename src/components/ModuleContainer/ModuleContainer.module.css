@@ -19,3 +19,11 @@
     height: 450px;
     padding: 20px;
 }
+
+.PlanCardContainer {
+    margin: 20px;
+    border: 2px solid black;
+    display: flex;
+    height: 500px;
+    padding: 20px;
+}

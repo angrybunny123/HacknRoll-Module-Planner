@@ -9,12 +9,29 @@ import Module from "../Module/Module";
 import Card from "../Card";
 import Board from "../Board";
 
-const onDropHandler = (list, startIndex, endIndex) => {
-  console.log(list);
+const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-  console.log(result);
+
+  return result;
+};
+
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+  if (destClone.length !== 0) {
+    destClone.splice(droppableDestination.index, 0, removed);
+  } else {
+    destClone.push(removed);
+  }
+
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+
   return result;
 };
 
@@ -32,11 +49,27 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 });
 
+const getPlanStyle = (isDraggingOver) => ({
+  background: isDraggingOver ? "lightblue" : "lightgrey",
+  display: "flex",
+  padding: 8,
+  overflow: "auto",
+  border: "2px solid black",
+  height: "450px",
+  width: "250px",
+  padding: "20px",
+});
+
 const getListStyle = (isDraggingOver) => ({
   background: isDraggingOver ? "lightblue" : "lightgrey",
   display: "flex",
   padding: 8,
   overflow: "auto",
+  border: "2px solid black",
+  width: "70%",
+  float: "left",
+  height: "450px",
+  padding: "20px",
 });
 
 class ModuleContainer extends Component {
@@ -96,10 +129,6 @@ class ModuleContainer extends Component {
       stringToPost = "teamproject";
     } else if (event.target.value === "Industrial Experience") {
       stringToPost = "industrial";
-      // } else if (event.target.value === "University Level Requirements") {
-      //     stringToPost = "/mathscience";
-      // } else if (event.target.value === "Unrestricted Electives") {
-      //     stringToPost = "/mathscience";
     } else if (event.target.value === "Algorithms & Theory") {
       stringToPost = "focusareas/algorithmsandtheory";
     } else if (event.target.value === "Artificial Intelligence") {
@@ -145,21 +174,49 @@ class ModuleContainer extends Component {
       .catch((error) => console.log(error));
   };
 
-  onDragEnd(result) {
-    if (!result.destination) {
+  id2List = {
+    droppable: "modules",
+    droppable2: "plan",
+  };
+
+  getList = (id) => this.state[this.id2List[id]];
+
+  onModuleFieldHandler = (event) => {
+    this.setState({ currentField: event.target.value });
+  };
+
+  onDragEnd = (result) => {
+    const { source, destination } = result;
+    if (!destination) {
       return;
     }
 
-    const newModules = onDropHandler(
-      this.state.modules,
-      result.source.index,
-      result.destination.index
-    );
+    if (source.droppableId === destination.droppableId) {
+      const newModules = reorder(
+        this.getList(source.droppableId),
+        source.index,
+        destination.index
+      );
 
-    this.setState({
-      modules: newModules,
-    });
-  }
+      if (source.droppableId === "droppable2") {
+        this.setState({ plan: newModules });
+      } else {
+        this.setState({ modules: newModules }); //maybe no need this cause we dont have to reorder in the all-module section
+      }
+    } else {
+      const result = move(
+        this.getList(source.droppableId),
+        this.getList(destination.droppableId),
+        source,
+        destination
+      );
+
+      this.setState({
+        modules: result.droppable,
+        plan: result.droppable2,
+      });
+    }
+  };
 
   render() {
     let modules;
@@ -173,8 +230,6 @@ class ModuleContainer extends Component {
       );
     });
 
-    console.log(modules);
-
     let moduleFields;
     moduleFields = this.state.dropdown.map((field) => {
       return (
@@ -184,20 +239,22 @@ class ModuleContainer extends Component {
       );
     });
 
+    console.log(modules);
+
     return (
-      <div className={classes.ModuleContainer}>
-        <div className={classes.Dropdown}>
-          <TextField
-            id="standard-select-field"
-            select
-            value={this.state.currentField}
-            onChange={this.onModuleFieldHandler}
-            helperText="Please select your area of interest"
-          >
-            {moduleFields}
-          </TextField>
-        </div>
-        <DragDropContext onDragEnd={this.onDragEnd}>
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <div className={classes.ModuleContainer}>
+          <div className={classes.Dropdown}>
+            <TextField
+              id="standard-select-field"
+              select
+              value={this.state.currentField}
+              onChange={this.onModuleFieldHandler}
+              helperText="Please select your area of interest"
+            >
+              {moduleFields}
+            </TextField>
+          </div>
           <Droppable droppableId="droppable" direction="horizontal">
             {(provided, snapshot) => (
               <div
@@ -230,8 +287,43 @@ class ModuleContainer extends Component {
               </div>
             )}
           </Droppable>
-        </DragDropContext>
-      </div>
+        </div>
+        <div className={classes.PlanCardContainer}>
+          <Droppable droppableId="droppable2" direction="vertical">
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                style={getPlanStyle(snapshot.isDraggingOver)}
+              >
+                {this.state.plan
+                  ? this.state.plan.map((module, index) => (
+                      <Draggable
+                        key={module.code}
+                        draggableId={module.code}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            {module.code}
+                          </div>
+                        )}
+                      </Draggable>
+                    ))
+                  : null}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
+      </DragDropContext>
     );
   }
 }
