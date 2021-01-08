@@ -11,7 +11,6 @@ class Base extends Component {
     render() {
         return (
             <div>
-                <Navbar isAuthenticated={localStorage.getItem("token") !== null}/>
                 <Switch>
                     <Route path="/auth" component={Auth} />
                     <Route path="/logout" component={Logout} />
