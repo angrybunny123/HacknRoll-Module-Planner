@@ -250,10 +250,176 @@ class App extends Component {
             });
             console.log(moduleTaken);
 
-            axios
-                .get(`${this.state.stringToPost}/${result.movedItem.code}.json`)
+            let getlink = "";
+            if (this.state.stringToPost.includes("focusareas")) {
+                console.log("hi im in focusarea")
+                getlink = `${this.state.stringToPost}/primaries/${result.movedItem.code}.json`;
+                    axios
+                    .get(getlink)
+                    .then((res) => res.data.prerequisites)
+                    .then((prerequisites) => {
+                       
+                        if (prerequisites === "none") {
+                            return true;
+                        }
+    
+                        let canTake = false;
+                        const prereqArr = Object.keys(prerequisites);
+    
+                        prereqArr.forEach((element) => {
+                            // check with user data
+    
+                            // check for OR
+                            if (element.search("-") !== -1) {
+                                console.log("hi im inside OR");
+                                const arr = element.split("-");
+                                console.log(arr);
+                                console.log(moduleTaken);
+                                canTake = false;
+    
+                                arr.forEach((module, index) => {
+                                    moduleTaken.forEach((modTaken, i) => {
+                                        console.log(modTaken);
+                                        console.log(module);
+                                        canTake =
+                                            canTake || modTaken.code === module;
+                                    });
+                                });
+    
+                                if (!canTake) {
+                                    return false;
+                                }
+                            } else {
+                                console.log(canTake);
+    
+                                // AND
+                                // loop through user data
+                                console.log("hi im at AND");
+                                console.log(moduleTaken);
+                                moduleTaken.forEach((modTaken, i) => {
+                                    console.log(modTaken);
+                                    console.log(element);
+                                    if (modTaken.code === element) {
+                                        canTake = true;
+                                        return;
+                                    }
+                                });
+    
+                                if (!canTake) {
+                                    return false;
+                                }
+                            }
+                        });
+                        console.log(canTake);
+                        return canTake;
+                    })
+                    .then((bool) => {
+                        if (bool) {
+                            console.log("hi im inside true");
+                            newDestinationArray.push(result.movedItem);
+                            console.log(
+                                "NEW DESTINATION ARRAY",
+                                newDestinationArray
+                            );
+                            console.log("New State", newState);
+                            newState.planner[source.droppableId] = result.source;
+                            newState.planner[
+                                destination.droppableId
+                            ] = newDestinationArray;
+                            this.setState(newState);
+                        } else {
+                            alert("Prerequisite not satisfied!!");
+                        }
+                    })
+                    .catch((err) => {
+                         getlink = `${this.state.stringToPost}/electives/${result.movedItem.code}.json`;
+                         axios
+                         .get(getlink)
+                         .then((res) => res.data.prerequisites)
+                         .then((prerequisites) => {
+                            
+                             if (prerequisites === "none") {
+                                 return true;
+                             }
+         
+                             let canTake = false;
+                             const prereqArr = Object.keys(prerequisites);
+         
+                             prereqArr.forEach((element) => {
+                                 // check with user data
+         
+                                 // check for OR
+                                 if (element.search("-") !== -1) {
+                                     console.log("hi im inside OR");
+                                     const arr = element.split("-");
+                                     console.log(arr);
+                                     console.log(moduleTaken);
+                                     canTake = false;
+         
+                                     arr.forEach((module, index) => {
+                                         moduleTaken.forEach((modTaken, i) => {
+                                             console.log(modTaken);
+                                             console.log(module);
+                                             canTake =
+                                                 canTake || modTaken.code === module;
+                                         });
+                                     });
+         
+                                     if (!canTake) {
+                                         return false;
+                                     }
+                                 } else {
+                                     console.log(canTake);
+         
+                                     // AND
+                                     // loop through user data
+                                     console.log("hi im at AND");
+                                     console.log(moduleTaken);
+                                     moduleTaken.forEach((modTaken, i) => {
+                                         console.log(modTaken);
+                                         console.log(element);
+                                         if (modTaken.code === element) {
+                                             canTake = true;
+                                             return;
+                                         }
+                                     });
+         
+                                     if (!canTake) {
+                                         return false;
+                                     }
+                                 }
+                             });
+                             console.log(canTake);
+                             return canTake;
+                         })
+                         .then((bool) => {
+                             if (bool) {
+                                 console.log("hi im inside true");
+                                 newDestinationArray.push(result.movedItem);
+                                 console.log(
+                                     "NEW DESTINATION ARRAY",
+                                     newDestinationArray
+                                 );
+                                 console.log("New State", newState);
+                                 newState.planner[source.droppableId] = result.source;
+                                 newState.planner[
+                                     destination.droppableId
+                                 ] = newDestinationArray;
+                                 this.setState(newState);
+                             } else {
+                                 alert("Prerequisite not satisfied!!");
+                             }
+                         })
+                         .catch((err) => console.log(err));
+                    });
+                
+            } else {
+                getlink = `${this.state.stringToPost}/${result.movedItem.code}.json`;
+                axios
+                .get(getlink)
                 .then((res) => res.data.prerequisites)
                 .then((prerequisites) => {
+                   
                     if (prerequisites === "none") {
                         return true;
                     }
@@ -327,6 +493,10 @@ class App extends Component {
                     }
                 })
                 .catch((err) => console.log(err));
+            }
+            }
+
+            
 
             // this.setState({
             //     planner: {
@@ -339,8 +509,7 @@ class App extends Component {
             //     plan: result.droppable2,
             //     planner: { ...this.state.planner, y1s1: result.y1s1 },
             // });
-        }
-    };
+        };
 
     render() {
         let modules;
