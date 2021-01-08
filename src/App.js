@@ -10,8 +10,6 @@ import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
 import PlanCard from "./components/PlanCard/PlanCard";
 import SummaryContainer from "./components/SummaryContainer/SummaryContainer";
 
-import { checkPrereq } from "./util/NusModChecker.js";
-
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -233,29 +231,14 @@ class App extends Component {
         moduleTaken.push(this.state.planner[key]);
       });
       console.log(result.movedItem);
-      console.log(
-        checkPrereq(
-          this.state.stringToPost,
-          result.movedItem.code,
-          moduleTaken
-        ),
-        "canTake"
-      );
 
-      //   if (
-      //     checkPrereq(this.state.stringToPost, result.movedItem.code, moduleTaken)
-      //   ) {
-      //     console.log("hi im inside true");
-      //     newDestinationArray.push(result.movedItem);
-      //     console.log("NEW DESTINATION ARRAY", newDestinationArray);
-      //     console.log("New State", newState);
-      //     newState.planner[source.droppableId] = result.source;
-      //     newState.planner[destination.droppableId] = newDestinationArray;
-      //     this.setState(newState);
-      //   } else {
-      //     alert("Prerequisite not satisfied!!");
-      //   }
-
+      console.log("hi im inside true");
+      newDestinationArray.push(result.movedItem);
+      console.log("NEW DESTINATION ARRAY", newDestinationArray);
+      console.log("New State", newState);
+      newState.planner[source.droppableId] = result.source;
+      newState.planner[destination.droppableId] = newDestinationArray;
+      this.setState(newState);
       // this.setState({
       //     planner: {
       //         modulesTaken: newDestinationArray,
