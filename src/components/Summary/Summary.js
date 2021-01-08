@@ -9,6 +9,15 @@ const useStyles = makeStyles((theme) => ({
         fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
     },
 
+    labelMC: {
+        fontSize: "17px",
+        fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+    },
+
+    container: {
+        margin: "12px auto auto auto",
+    },
+
     Foundation: {
         width: "100%",
         height: "100px",
@@ -74,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 
     UniversityLevelRequirements: {
         width: "100%",
-        height: "100px",
+        height: "110px",
         border: "2px solid black",
         margin: "10px",
         borderRadius: "10px",
@@ -91,6 +100,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Summary = (props) => {
+    const calculateMcNeeded = () => {
+        if (props.label === "Foundation") {
+            return 36;
+        } else if (props.label === "Focus Area") {
+            return 24;
+        } else if (props.label === "Math and Science") {
+            return 16;
+        } else if (props.label === "IT Professionalism") {
+            return 12;
+        } else if (props.label === "Industrial Experience") {
+            return 12;
+        } else if (props.label === "Team Project") {
+            return 8;
+        } else if (props.label === "Unrestricted Electives") {
+            return 32;
+        } else if (props.label === "University Level Requirements") {
+            return 20;
+        }
+    };
     const classes = useStyles();
 
     return (
@@ -116,8 +144,15 @@ const Summary = (props) => {
                     : classes.Default
             }
         >
-            <label className={classes.label}>{props.label}</label>
-            <label className={classes.label}> 0</label>
+            <div className={classes.container}>
+                <label className={classes.label}>{props.label}</label>
+                <label className={classes.labelMC}>
+                    <br />
+                    MCs Needed: {calculateMcNeeded()}
+                    <br />
+                    MCs Taken: {0}
+                </label>
+            </div>
         </Paper>
     );
 };

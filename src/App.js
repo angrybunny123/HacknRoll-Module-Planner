@@ -1,13 +1,10 @@
 import React, { Component } from "react";
-import { Counter } from "./features/counter/Counter";
-import { Button } from "@material-ui/core";
 import axios from "./axios.js";
 
 import classes from "./App.module.css";
 
 import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
 import SummaryContainer from "./components/SummaryContainer/SummaryContainer";
-import PlanCard from "./components/PlanCard/PlanCard";
 
 class App extends Component {
     axiosTestPostRequest = () => {
