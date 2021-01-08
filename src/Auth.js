@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import classes from "./Auth.module.css";
 
+import Navbar from "./components/Navbar/Navbar";
 import Input from "./components/FormElement/Input/Input";
 import * as actions from "./store/AuthAction";
 
@@ -109,7 +110,6 @@ class Auth extends Component {
         }
     };
 
-
     switchAuthModeHandler = () => {
         console.log(this.state.isSignup);
         if (this.state.isSignup === false) {
@@ -178,16 +178,24 @@ class Auth extends Component {
         }
 
         return (
-            <div className={classes.Auth}>
-                {authRedirect}
-                {errorMessage}
-                <form>
-                    {form}
-                    <Button onClick={this.submitHandler}>SUBMIT</Button>
-                </form>
-                <Button className={classes.Button} onClick={this.switchAuthModeHandler}>
-                   SWITCH TO {this.state.isSignup ? "SIGN IN" : "SIGN UP"}
-                </Button>
+            <div>
+                <Navbar
+                    isAuthenticated={localStorage.getItem("token") !== null}
+                />
+                <div className={classes.Auth}>
+                    {authRedirect}
+                    {errorMessage}
+                    <form>
+                        {form}
+                        <Button onClick={this.submitHandler}>SUBMIT</Button>
+                    </form>
+                    <Button
+                        className={classes.Button}
+                        onClick={this.switchAuthModeHandler}
+                    >
+                        SWITCH TO {this.state.isSignup ? "SIGN IN" : "SIGN UP"}
+                    </Button>
+                </div>
             </div>
         );
     }

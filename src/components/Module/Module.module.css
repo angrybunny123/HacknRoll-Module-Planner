@@ -9,6 +9,10 @@
   text-align: center;
 }
 
+.Module:hover {
+  opacity: 0.8;
+}
+
 .Module h4 {
   font-size: 12px;
   font-weight: 200px;

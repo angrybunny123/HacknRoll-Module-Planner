@@ -21,9 +21,7 @@ class PlanCard extends Component {
   render() {
     return (
       <div className={classes.PlanCardContainer}>
-          <p>
-              {this.props.acadYear}
-          </p>
+        <p>{this.props.acadYear}</p>
         <Droppable droppableId={this.props.droppableId} direction="vertical">
           {(provided, snapshot) => (
             <div
@@ -47,6 +45,7 @@ class PlanCard extends Component {
                             moduleCode={module.code}
                             isDragging={snapshot.isDragging}
                             elective={module.elective ? true : false}
+                            moduleName={module.name}
                           />
                         </div>
                       )}

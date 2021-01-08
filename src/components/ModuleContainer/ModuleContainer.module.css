@@ -1,30 +1,52 @@
 .ModuleContainer {
-    margin: 20px;
-    border: 2px solid black;
-    display: flex;
-    padding: 20px;
+  margin: 20px;
+  border: 2px solid black;
+  display: flex;
+  padding: 20px;
 }
 
 .Dropdown {
-    width: 30%;
-    float: left;
-    text-align: center;
+  width: 30%;
+  float: left;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+.Dropdown Button {
+  width: 200px;
+  height: 80px;
+  margin-top: -150px;
+  margin-left: -200px;
+  font-size: 20px;
+  font-weight: 500;
+  background-color: rgb(230, 164, 43);
+  color: white;
+  border-radius: 5%;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.Dropdown Button:hover {
+  background-color: rgb(230, 164, 43);
+  color: white;
+  opacity: 0.9;
 }
 
 .ModulePool {
-    width: 70%;
-    float: left;
-    border: 2px solid black;
-    height: 450px;
-    padding: 20px;
+  width: 70%;
+  float: left;
+  border: 2px solid black;
+  height: 450px;
+  padding: 20px;
 }
 
 .PlanCardContainer {
-    margin: 20px;
-    border: 2px solid black;
-    display: flex;
-    height: 500px;
-    padding: 20px;
-    overflow: auto;
+  margin: 20px;
+  border: 2px solid black;
+  display: flex;
+  height: 500px;
+  padding: 20px;
+  overflow: auto;
 }
-
