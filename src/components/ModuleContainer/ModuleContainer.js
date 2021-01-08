@@ -105,8 +105,6 @@ class ModuleContainer extends Component {
                 "Software Engineering",
             ],
             currentField: "",
-            modules: [],
-            plan: [],
             planner: {
                 modules: [],
                 y1s1: [],
@@ -326,41 +324,6 @@ class ModuleContainer extends Component {
                     </Droppable>
                 </div>
                 <div className={classes.PlanCardContainer}>
-                    <Droppable droppableId="droppable2" direction="vertical">
-                        {(provided, snapshot) => (
-                            <div
-                                ref={provided.innerRef}
-                                style={getPlanStyle(snapshot.isDraggingOver)}
-                            >
-                                {this.state.plan
-                                    ? this.state.plan.map((module, index) => (
-                                          <Draggable
-                                              key={module.code}
-                                              draggableId={module.code}
-                                              index={index}
-                                          >
-                                              {(provided, snapshot) => (
-                                                  <div
-                                                      ref={provided.innerRef}
-                                                      {...provided.draggableProps}
-                                                      {...provided.dragHandleProps}
-                                                      style={getItemStyle(
-                                                          snapshot.isDragging,
-                                                          provided
-                                                              .draggableProps
-                                                              .style
-                                                      )}
-                                                  >
-                                                      {module.code}
-                                                  </div>
-                                              )}
-                                          </Draggable>
-                                      ))
-                                    : null}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
                     <PlanCard
                         droppableId="y1s1"
                         array={this.state.planner.y1s1}
