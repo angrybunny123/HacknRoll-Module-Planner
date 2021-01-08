@@ -279,16 +279,6 @@ class App extends Component {
             let newDestinationArray = [
                 ...this.state.planner[destination.droppableId],
             ];
-
-            // let lastIndex = result.destination ? result.destination.length - 1 : 0;
-
-            newDestinationArray.push(result.movedItem);
-            console.log("NEW DESTINATION ARRAY", newDestinationArray);
-            console.log("New State", newState);
-            newState.planner[source.droppableId] = result.source;
-            newState.planner[destination.droppableId] = newDestinationArray;
-
-            this.setState(newState);
           
             let moduleTaken = [];
 
@@ -523,6 +513,7 @@ class App extends Component {
                         newState.planner[
                             destination.droppableId
                         ] = newDestinationArray;
+                        console.log("Brand new state", newState);
                         this.setState(newState);
                     } else {
                         alert("Prerequisite not satisfied!!");
