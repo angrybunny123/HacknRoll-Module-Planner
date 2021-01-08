@@ -7,6 +7,7 @@ import axios from './axios.js';
 import Board from './components/Board';
 import Card from './components/Card';
 import Module from './components/Module/Module';
+import ModuleContainer from "./components/ModuleContainer/ModuleContainer";
 
 class App extends Component {
 
@@ -25,6 +26,7 @@ class App extends Component {
   render() {
     return (
     <div className="App">
+      <ModuleContainer />
       <main className="flexbox">
       <Board id="board-1" className="board">
         <Card id="card-1" className="card" draggable="true">
