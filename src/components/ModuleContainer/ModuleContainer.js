@@ -8,12 +8,29 @@ import Module from "../Module/Module";
 import Card from "../Card";
 import Board from "../Board";
 
-const onDropHandler = (list, startIndex, endIndex) => {
-    console.log(list);
+const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-    console.log(result);
+
+    return result;
+};
+
+const move = (source, destination, droppableSource, droppableDestination) => {
+    const sourceClone = Array.from(source);
+    const destClone = Array.from(destination);
+    const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+    if (destClone.length !== 0) {
+        destClone.splice(droppableDestination.index, 0, removed);
+    } else {
+        destClone.push(removed);
+    }
+
+    const result = {};
+    result[droppableSource.droppableId] = sourceClone;
+    result[droppableDestination.droppableId] = destClone;
+
     return result;
 };
 
@@ -35,50 +52,73 @@ const getListStyle = (isDraggingOver) => ({
     background: isDraggingOver ? "lightblue" : "lightgrey",
     display: "flex",
     padding: 8,
+    width: "200px",
     overflow: "auto",
+    border: "2px solid black",
 });
 
 class ModuleContainer extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            dropdown: ["Foundation", "Math and Science", "IT Professionalism"],
-            currentField: "",
-            modules: [
-                {
-                    code: "CS1231",
-                    prereq: null,
-                    preclusion: null,
-                },
-                {
-                    code: "CS1101S",
-                    prereq: null,
-                    preclusion: null,
-                },
-            ],
-        };
-        this.onDragEnd = this.onDragEnd.bind(this);
-    }
+    state = {
+        dropdown: ["Foundation", "Math and Science", "IT Professionalism"],
+        currentField: "",
+        modules: [
+            {
+                code: "CS1231",
+                prereq: null,
+                preclusion: null,
+            },
+            {
+                code: "CS1101S",
+                prereq: null,
+                preclusion: null,
+            },
+        ],
+        plan: [],
+    };
+
+    id2List = {
+        droppable: "modules",
+        droppable2: "plan",
+    };
+
+    getList = (id) => this.state[this.id2List[id]];
 
     onModuleFieldHandler = (event) => {
         this.setState({ currentField: event.target.value });
     };
 
-    onDragEnd(result) {
-        if (!result.destination) {
+    onDragEnd = (result) => {
+        const { source, destination } = result;
+        if (!destination) {
             return;
         }
 
-        const newModules = onDropHandler(
-            this.state.modules,
-            result.source.index,
-            result.destination.index
-        );
+        if (source.droppableId === destination.droppableId) {
+            const newModules = reorder(
+                this.getList(source.droppableId),
+                source.index,
+                destination.index
+            );
 
-        this.setState({
-            modules: newModules,
-        });
-    }
+            if (source.droppableId === "droppable2") {
+                this.setState({ plan: newModules });
+            } else {
+                this.setState({ modules: newModules }); //maybe no need this cause we dont have to reorder in the all-module section
+            }
+        } else {
+            const result = move(
+                this.getList(source.droppableId),
+                this.getList(destination.droppableId),
+                source,
+                destination
+            );
+
+            this.setState({
+                modules: result.droppable,
+                plan: result.droppable2,
+            });
+        }
+    };
 
     render() {
         let modules;
@@ -146,6 +186,41 @@ class ModuleContainer extends Component {
                                         )}
                                     </Draggable>
                                 ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                    <Droppable droppableId="droppable2" direction="vertical">
+                        {(provided, snapshot) => (
+                            <div
+                                ref={provided.innerRef}
+                                style={getListStyle(snapshot.isDraggingOver)}
+                            >
+                                {this.state.plan
+                                    ? this.state.plan.map((module, index) => (
+                                          <Draggable
+                                              key={module.code}
+                                              draggableId={module.code}
+                                              index={index}
+                                          >
+                                              {(provided, snapshot) => (
+                                                  <div
+                                                      ref={provided.innerRef}
+                                                      {...provided.draggableProps}
+                                                      {...provided.dragHandleProps}
+                                                      style={getItemStyle(
+                                                          snapshot.isDragging,
+                                                          provided
+                                                              .draggableProps
+                                                              .style
+                                                      )}
+                                                  >
+                                                      {module.code}
+                                                  </div>
+                                              )}
+                                          </Draggable>
+                                      ))
+                                    : null}
                                 {provided.placeholder}
                             </div>
                         )}
