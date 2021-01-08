@@ -241,6 +241,7 @@ class ModuleContainer extends Component {
 
         return (
             <DragDropContext onDragEnd={this.onDragEnd}>
+                <h1>Modules</h1>
                 <div className={classes.ModuleContainer}>
                     <div className={classes.Dropdown}>
                         <TextField
@@ -287,6 +288,7 @@ class ModuleContainer extends Component {
                         )}
                     </Droppable>
                 </div>
+
                 <div className={classes.PlanCardContainer}>
                     <Droppable droppableId="droppable2" direction="vertical">
                         {(provided, snapshot) => (
