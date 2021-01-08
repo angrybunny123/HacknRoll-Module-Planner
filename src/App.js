@@ -6,6 +6,7 @@ import axios from './axios.js';
 
 import Board from './components/Board';
 import Card from './components/Card';
+import Module from './components/Module/Module';
 
 class App extends Component {
 
@@ -24,16 +25,10 @@ class App extends Component {
   render() {
     return (
     <div className="App">
-      <header className="App-header">
-        <h2>Hackathon Module Planner Template</h2>
-        <Counter />
-        <Button color="primary" onClick={this.axiosTestPostRequest}>POST DUMMY MODULE</Button>
-        <Button color="primary" onClick={this.axiosTestGetRequest}>GET ALL MODULES</Button>
-      </header>
       <main className="flexbox">
       <Board id="board-1" className="board">
         <Card id="card-1" className="card" draggable="true">
-          <p>card one</p>
+          <Module moduleCode="CS1231"/>
         </Card>
       </Board>
       <Board id="board-2" className="board">
