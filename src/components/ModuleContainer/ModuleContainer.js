@@ -41,32 +41,6 @@ const move = (source, destination, droppableSource, droppableDestination) => {
     return result;
 };
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: "none",
-    padding: "16px",
-    margin: `0 8px 8px 8px`,
-    height: `20px`,
-
-    // change background colour if dragging
-    background: isDragging ? "lightgreen" : "grey",
-
-    // styles we need to apply on draggables
-    ...draggableStyle,
-});
-
-const getPlanStyle = (isDraggingOver) => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    display: "flex",
-    flexWrap: "wrap",
-    alignContent: "flex-start",
-    overflow: "auto",
-    border: "2px solid black",
-    height: "450px",
-    width: "90px",
-    padding: "20px",
-});
-
 const getListStyle = (isDraggingOver) => ({
     background: isDraggingOver ? "lightblue" : "lightgrey",
     display: "flex",
@@ -169,15 +143,24 @@ class ModuleContainer extends Component {
                         }
                     }
                     for (let j = 0; j < newModules.length; j++) {
-                        Object.entries(this.state.planner).forEach(([yearSem, modulesTookEachSem]) => {
-                            if (yearSem !== "modules") {
-                                for (let i = 0; i < modulesTookEachSem.length; i++) {
-                                    if (modulesTookEachSem[i].code === newModules[j].code) {
-                                        newModules.splice(j, 1);
+                        Object.entries(this.state.planner).forEach(
+                            ([yearSem, modulesTookEachSem]) => {
+                                if (yearSem !== "modules") {
+                                    for (
+                                        let i = 0;
+                                        i < modulesTookEachSem.length;
+                                        i++
+                                    ) {
+                                        if (
+                                            modulesTookEachSem[i].code ===
+                                            newModules[j].code
+                                        ) {
+                                            newModules.splice(j, 1);
+                                        }
                                     }
                                 }
                             }
-                        })
+                        );
                     }
                     this.setState({
                         planner: { ...this.state.planner, modules: newModules },
@@ -186,22 +169,30 @@ class ModuleContainer extends Component {
                 } else {
                     let modulesCheck = Object.values(response.data);
                     for (let j = 0; j < modulesCheck.length; j++) {
-                        Object.entries(this.state.planner).forEach(([yearSem, modulesTookEachSem]) => {
-                            if (yearSem !== "modules") {
-                                for (let i = 0; i < modulesTookEachSem.length; i++) {
-                                    if (modulesTookEachSem[i].code === modulesCheck[j].code) {
-                                        modulesCheck.splice(j, 1);
+                        Object.entries(this.state.planner).forEach(
+                            ([yearSem, modulesTookEachSem]) => {
+                                if (yearSem !== "modules") {
+                                    for (
+                                        let i = 0;
+                                        i < modulesTookEachSem.length;
+                                        i++
+                                    ) {
+                                        if (
+                                            modulesTookEachSem[i].code ===
+                                            modulesCheck[j].code
+                                        ) {
+                                            modulesCheck.splice(j, 1);
+                                        }
                                     }
                                 }
                             }
-                        })
+                        );
                     }
                     this.setState({
                         planner: {
                             ...this.state.planner,
                             modules: modulesCheck,
                         },
-
                     });
                 }
             })
@@ -248,12 +239,13 @@ class ModuleContainer extends Component {
                 source,
                 destination
             );
-            
+
             console.log("Old State", this.state);
             const newState = JSON.parse(JSON.stringify(this.state));
-            let newDestinationArray = [...this.state.planner[destination.droppableId]];
-            
-            
+            let newDestinationArray = [
+                ...this.state.planner[destination.droppableId],
+            ];
+
             // let lastIndex = result.destination ? result.destination.length - 1 : 0;
 
             newDestinationArray.push(result.movedItem);
@@ -280,13 +272,7 @@ class ModuleContainer extends Component {
     render() {
         let modules;
         modules = this.state.planner.modules.map((module) => {
-            return (
-                <Board id={module.code} className="board">
-                    <Card id="card-1" className="card" draggable="true">
-                        <Module moduleCode={module.code} />
-                    </Card>
-                </Board>
-            );
+            return <Module moduleCode={module.code} />;
         });
 
         let moduleFields;
@@ -336,14 +322,8 @@ class ModuleContainer extends Component {
                                                           }
                                                           {...provided.draggableProps}
                                                           {...provided.dragHandleProps}
-                                                          style={getItemStyle(
-                                                              snapshot.isDragging,
-                                                              provided
-                                                                  .draggableProps
-                                                                  .style
-                                                          )}
                                                       >
-                                                          {module.code}
+                                                          <Module moduleCode={module.code} isDragging={snapshot.isDragging} />
                                                       </div>
                                                   )}
                                               </Draggable>
