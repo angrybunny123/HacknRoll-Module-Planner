@@ -234,7 +234,7 @@ const Summary = (props) => {
     </label>
   );
 
-  if (calculateMcTaken() === calculateMcNeeded()) {
+  if (calculateMcTaken() >= calculateMcNeeded()) {
     creditstats = (
       <div
         style={{
